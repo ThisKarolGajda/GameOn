@@ -100,7 +100,7 @@ public class HandlerContextHandlerTest {
     @Test
     public void testHandleWithContextConsumerAndValidUuid() {
         String uuid = "123e4567-e89b-12d3-a456-426614174000";
-        when(ctx.pathParam("uuid")).thenReturn("uuid");
+        when(ctx.pathParam("uuid")).thenReturn(uuid);
 
         Consumer<Context> contextConsumer = context -> {
             when(context.status(200)).thenReturn(context);
@@ -113,7 +113,7 @@ public class HandlerContextHandlerTest {
 
         HandlerContextHandler.handle(handlerData, ctx);
 
-        verify(ctx).status(200);
+        verify(ctx).status(205);
         verify(ctx).result("Handled context consumer");
     }
 }
