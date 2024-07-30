@@ -22,7 +22,6 @@ public class HandlerContextHandlerTest {
         handlerData = mock(HandlerData.class);
     }
 
-
     @Test
     public void testHandleWithContextConsumer() {
         when(ctx.pathParam("uuid")).thenReturn("");
