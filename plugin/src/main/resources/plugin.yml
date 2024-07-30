@@ -1,0 +1,21 @@
+name: GameOnPlugin
+version: '${project.version}'
+main: com.gameon.plugin.GameOnPlugin
+api-version: '1.13'
+
+softdepend:
+  - Vault
+  - DecentHolograms
+  - PlaceholderAPI
+  - WorldEdit
+  - WorldGuard
+
+libraries:
+  - "io.javalin:javalin:6.1.6"
+  - "org.slf4j:slf4j-simple:2.0.11"
+  - "com.fasterxml.jackson.core:jackson-databind:2.13.2"
+
+commands:
+  gameon:
+    description: Generates a JWT token for the user.
+    usage: /<command>
