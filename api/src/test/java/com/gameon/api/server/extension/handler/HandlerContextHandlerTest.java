@@ -113,7 +113,7 @@ public class HandlerContextHandlerTest {
 
         HandlerContextHandler.handle(handlerData, ctx);
 
-        verify(ctx).status(205);
+        verify(ctx).status(200);
         verify(ctx).result("Handled context consumer");
     }
 }
