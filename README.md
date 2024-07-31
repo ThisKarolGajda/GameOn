@@ -24,7 +24,7 @@ GameOn Server Middleware is a comprehensive solution designed to connect Minecra
 3. **Data Handling**: The middleware handles requests for player stats, economy transactions, and server information.
 
 ### APIs
-- **AuthenticationAPI**: Manages user authentication and sessions.
+- **AuthenticationAPI**: Manages abstractUser authentication and sessions.
 - **EconomyAPI**: Handles in-game economy operations (balance, transactions).
 - ***PlayerStatsAPI**: Provides player statistics and game data.
 - ***ServerMapAPI**: Supplies information about available servers and their statuses.
@@ -37,59 +37,59 @@ GameOn Server Middleware is a comprehensive solution designed to connect Minecra
 ```java
 public interface IEconomy extends IExtension {
     /**
-     * Retrieves the balance of the specified user.
+     * Retrieves the balance of the specified abstractUser.
      *
-     * @param userId The UserId of the user whose balance is to be retrieved.
-     * @return The balance of the user as a double.
+     * @param userId The UserId of the abstractUser whose balance is to be retrieved.
+     * @return The balance of the abstractUser as a double.
      */
     double getBalance(UserId userId);
 
     /**
-     * Checks if the specified user has a sufficient balance for a given amount.
+     * Checks if the specified abstractUser has a sufficient balance for a given amount.
      *
-     * @param userId The UserId of the user whose balance is to be checked.
-     * @param amount The amount to check against the user's balance.
-     * @return True if the user has sufficient balance, false otherwise.
+     * @param userId The UserId of the abstractUser whose balance is to be checked.
+     * @param amount The amount to check against the abstractUser's balance.
+     * @return True if the abstractUser has sufficient balance, false otherwise.
      */
     boolean hasSufficientBalance(UserId userId, double amount);
 
     /**
-     * Withdraws a specified amount from the user's balance.
+     * Withdraws a specified amount from the abstractUser's balance.
      *
-     * @param userId The UserId of the user from whose account the amount will be withdrawn.
+     * @param userId The UserId of the abstractUser from whose account the amount will be withdrawn.
      * @param amount The amount to withdraw.
      */
     void withdraw(UserId userId, double amount);
 
     /**
-     * Deposits a specified amount into the user's balance.
+     * Deposits a specified amount into the abstractUser's balance.
      *
-     * @param userId The UserId of the user to whom the amount will be deposited.
+     * @param userId The UserId of the abstractUser to whom the amount will be deposited.
      * @param amount The amount to deposit.
      */
     void deposit(UserId userId, double amount);
 
     /**
-     * Transfers a specified amount from one user to another.
+     * Transfers a specified amount from one abstractUser to another.
      *
-     * @param fromUserId The UserId of the user from whom the amount will be transferred.
-     * @param toUserId The UserId of the user to whom the amount will be transferred.
+     * @param fromUserId The UserId of the abstractUser from whom the amount will be transferred.
+     * @param toUserId The UserId of the abstractUser to whom the amount will be transferred.
      * @param amount The amount to transfer.
      */
     void transfer(UserId fromUserId, UserId toUserId, double amount);
 
     /**
-     * Sets the balance of the specified user to a given amount.
+     * Sets the balance of the specified abstractUser to a given amount.
      *
-     * @param userId The UserId of the user whose balance will be set.
-     * @param amount The new balance to set for the user.
+     * @param userId The UserId of the abstractUser whose balance will be set.
+     * @param amount The new balance to set for the abstractUser.
      */
     void setBalance(UserId userId, double amount);
 
     /**
-     * Retrieves a map of all user balances.
+     * Retrieves a map of all abstractUser balances.
      *
-     * @return A map where the key is the UserId and the value is the user's balance.
+     * @return A map where the key is the UserId and the value is the abstractUser's balance.
      */
     Map<UserId, Double> getAllUserBalances();
 }
@@ -100,10 +100,10 @@ public interface IEconomy extends IExtension {
 public interface IAuthentication extends IExtension {
 
     /**
-     * Authenticates a user based on their UserId.
+     * Authenticates a abstractUser based on their UserId.
      *
-     * @param userId The UserId of the user to authenticate.
-     * @return A token representing the authenticated user session.
+     * @param userId The UserId of the abstractUser to authenticate.
+     * @return A token representing the authenticated abstractUser session.
      */
     String authenticate(UserId userId);
 

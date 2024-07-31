@@ -25,12 +25,14 @@ public class GameOnCommand implements CommandExecutor {
             return true;
         }
 
-        String token = authentication.authenticate(new UserId(player.getUniqueId(), player.getName()));
-        TextComponent tokenMessage = new TextComponent("Your JWT token: ");
+        String token = authentication.generatePairingToken(new UserId(player.getUniqueId(), player.getName()));
+
+        TextComponent tokenMessage = new TextComponent("Your token: ");
         TextComponent tokenComponent = new TextComponent(token);
+        TextComponent tokenMessage2 = new TextComponent(". Enter it in the GameOn mobile app!");
         tokenComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to copy").create()));
         tokenComponent.setClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, token));
-        player.spigot().sendMessage(tokenMessage, tokenComponent);
+        player.spigot().sendMessage(tokenMessage, tokenComponent, tokenMessage2);
         return true;
     }
 }

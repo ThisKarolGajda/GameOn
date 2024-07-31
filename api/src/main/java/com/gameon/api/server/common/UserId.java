@@ -4,12 +4,20 @@ import java.util.Objects;
 import java.util.UUID;
 
 public record UserId(UUID uuid, String username) {
-    public static UserId fromUuid(String uuid) {
+    public static UserId fromUuid(UUID uuid) {
         if (uuid == null) {
             return null;
         }
 
-        return new UserId(UUID.fromString(uuid), uuid);
+        return new UserId(uuid, uuid.toString());
+    }
+
+    public static UserId fromUuidString(String uuid) {
+        if (uuid == null) {
+            return null;
+        }
+
+        return fromUuid(UUID.fromString(uuid));
     }
 
     public static UserId fromString(String userId) {

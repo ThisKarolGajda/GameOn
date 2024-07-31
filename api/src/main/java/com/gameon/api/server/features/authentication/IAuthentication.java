@@ -28,4 +28,21 @@ public interface IAuthentication extends IExtension {
      * @return The UserId associated with the token, or null if the token is invalid.
      */
     UserId getUserFromToken(String token);
+
+    /**
+     * Generates a pairing token for a given UserId.
+     *
+     * @param userId The UserId for which to generate the pairing token.
+     * @return A unique pairing token.
+     */
+    String generatePairingToken(UserId userId);
+
+    /**
+     * Validates a pairing token and retrieves the associated UserId.
+     *
+     * @param token The pairing token to validate.
+     * @param nickname The nickname of user that is requesting token.
+     * @return The UserId associated with the token, or null if the token is invalid.
+     */
+    UserId validatePairingToken(String nickname, String token);
 }

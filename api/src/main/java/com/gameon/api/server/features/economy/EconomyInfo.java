@@ -1,26 +1,23 @@
 package com.gameon.api.server.features.economy;
 
 import com.gameon.api.server.common.UserId;
+import com.gameon.api.server.extension.AbstractModuleInfo;
 import com.gameon.api.server.extension.IExtension;
-import com.gameon.api.server.extension.IModuleInfo;
 import com.gameon.api.server.extension.handler.HandlerAccessType;
 import com.gameon.api.server.extension.handler.HandlerData;
 import com.gameon.api.server.features.GameOnFeatureType;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
 import io.javalin.http.HttpStatus;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class EconomyInfo implements IModuleInfo {
+public class EconomyInfo extends AbstractModuleInfo {
     private IEconomy economy;
-    private Gson gson;
 
     @Override
     public GameOnFeatureType getType() {
@@ -29,7 +26,6 @@ public class EconomyInfo implements IModuleInfo {
 
     @Override
     public Set<HandlerData> getRoutes(IExtension extension) {
-        this.gson = new Gson();
         this.economy = (IEconomy) extension;
         Set<HandlerData> routes = new HashSet<>();
 
@@ -47,9 +43,7 @@ public class EconomyInfo implements IModuleInfo {
         String uuid = ctx.pathParam("uuid");
         UserId userId = getUserIdFromUuid(uuid);
         double balance = economy.getBalance(userId);
-        Map<String, Object> response = new HashMap<>();
-        response.put("balance", balance);
-        ctx.status(HttpStatus.OK).json(response);
+        success(ctx, Map.of("balance", balance));
     }
 
     private void deposit(Context ctx) {
@@ -57,9 +51,7 @@ public class EconomyInfo implements IModuleInfo {
         double amount = ctx.bodyAsClass(Double.class);
         UserId userId = getUserIdFromUuid(uuid);
         economy.deposit(userId, amount);
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Deposited " + amount + " to " + uuid);
-        ctx.status(HttpStatus.OK).json(response);
+        success(ctx, "Deposited " + amount + " to " + uuid);
     }
 
     private void withdraw(Context ctx) {
@@ -68,27 +60,15 @@ public class EconomyInfo implements IModuleInfo {
         UserId userId = getUserIdFromUuid(uuid);
         if (economy.hasSufficientBalance(userId, amount)) {
             economy.withdraw(userId, amount);
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Withdrew " + amount + " from " + uuid);
-            ctx.status(HttpStatus.OK).json(response);
+            success(ctx, "Withdrew " + amount + " from " + uuid);
         } else {
-            Map<String, Object> response = new HashMap<>();
-            response.put("error", "Insufficient balance");
-            ctx.status(HttpStatus.BAD_REQUEST).json(response);
+            error(ctx, "Insufficient balance");
         }
     }
 
     @Nullable
     private UserId getTransferFromUserId(Context ctx) {
-        Map<String, String> transferData;
-
-        try {
-            transferData = gson.fromJson(ctx.body(), new TypeToken<Map<String, String>>() {}.getType());
-        } catch (Exception e) {
-            ctx.status(HttpStatus.BAD_REQUEST).json(Map.of("error", "Invalid request body"));
-            return null;
-        }
-
+        Map<String, String> transferData = deserializeAndCastRequestBody(ctx);
         String fromUuid = transferData.get("from");
         return getUserIdFromUuid(fromUuid);
     }
@@ -97,9 +77,9 @@ public class EconomyInfo implements IModuleInfo {
         Map<String, String> transferData;
 
         try {
-            transferData = gson.fromJson(ctx.body(), new TypeToken<Map<String, String>>() {}.getType());
+            transferData = getGson().fromJson(ctx.body(), new TypeToken<Map<String, String>>() {}.getType());
         } catch (Exception e) {
-            ctx.status(HttpStatus.BAD_REQUEST).json(Map.of("error", "Invalid request body"));
+            error(ctx, "Invalid request body");
             return;
         }
 
@@ -109,13 +89,9 @@ public class EconomyInfo implements IModuleInfo {
 
         if (economy.hasSufficientBalance(owner, amount)) {
             economy.transfer(owner, toUserId, amount);
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Transferred " + amount + " from " + owner + " to " + toUuid);
-            ctx.status(HttpStatus.OK).json(response);
+            success(ctx, "Transferred " + amount + " from " + owner + " to " + toUuid);
         } else {
-            Map<String, Object> response = new HashMap<>();
-            response.put("error", "Insufficient balance for transfer");
-            ctx.status(HttpStatus.BAD_REQUEST).json(response);
+            error(ctx, "Insufficient balance");
         }
     }
 
@@ -124,9 +100,7 @@ public class EconomyInfo implements IModuleInfo {
         double newBalance = ctx.bodyAsClass(Double.class);
         UserId userId = getUserIdFromUuid(uuid);
         economy.setBalance(userId, newBalance);
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Set balance of " + uuid + " to " + newBalance);
-        ctx.status(HttpStatus.OK).json(response);
+        success(ctx, "Set balance of " + uuid + " to " + newBalance);
     }
 
     private void getAllBalances(Context ctx) {
@@ -135,7 +109,7 @@ public class EconomyInfo implements IModuleInfo {
     }
 
     private UserId getUserIdFromUuid(String uuid) {
-        return UserId.fromUuid(uuid);
+        return UserId.fromUuidString(uuid);
     }
 
     @Override

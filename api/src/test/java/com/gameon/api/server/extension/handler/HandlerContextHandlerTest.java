@@ -79,7 +79,7 @@ public class HandlerContextHandlerTest {
     @Test
     public void testGetUserIdFromContextWithOwnerIdSupplierAndEmptyUuid() {
         when(ctx.pathParam("uuid")).thenReturn("");
-        Function<Context, UserId> ownerIdSupplier = context -> UserId.fromUuid("123e4567-e89b-12d3-a456-426614174000");
+        Function<Context, UserId> ownerIdSupplier = context -> UserId.fromUuidString("123e4567-e89b-12d3-a456-426614174000");
         when(handlerData.getOwnerIdSupplier()).thenReturn(ownerIdSupplier);
 
         UserId userId = HandlerContextHandler.getUserIdFromContext(handlerData, ctx);

@@ -3,13 +3,18 @@ package com.gameon.api.server.features.authentication;
 import com.gameon.api.server.common.UserId;
 import io.jsonwebtoken.Claims;
 
+import java.security.SecureRandom;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JwtAuthentication implements IAuthentication {
     private final JwtTokenManager jwtTokenManager;
+    private final Map<String, UserId> pairingTokens;
 
     public JwtAuthentication(String secretKey, long expirationTimeMillis) {
         this.jwtTokenManager = new JwtTokenManager(secretKey, expirationTimeMillis);
+        this.pairingTokens = new HashMap<>();
     }
 
     @Override
@@ -30,6 +35,31 @@ public class JwtAuthentication implements IAuthentication {
             return UserId.fromString(claims.getSubject());
         }
         return null;
+    }
+
+    @Override
+    public String generatePairingToken(UserId userId) {
+        String pairingToken = generateRandomToken();
+        pairingTokens.put(userId.username() + ":" + pairingToken, userId);
+        return pairingToken;
+    }
+
+    private String generateRandomToken() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder token = new StringBuilder(6);
+
+        for (int i = 0; i < 6; i++) {
+            int index = random.nextInt(characters.length());
+            token.append(characters.charAt(index));
+        }
+
+        return token.toString();
+    }
+
+    @Override
+    public UserId validatePairingToken(String nickname, String token) {
+        return pairingTokens.remove(nickname + ":" + token);
     }
 
     @Override

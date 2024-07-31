@@ -16,7 +16,7 @@ public class HandlerContextHandler {
             String uuid = ctx.pathParam("uuid");
             if (!uuid.isEmpty()) {
                 if (handler.getContextOwnerConsumer() != null) {
-                    handler.getContextOwnerConsumer().accept(ctx, UserId.fromUuid(uuid));
+                    handler.getContextOwnerConsumer().accept(ctx, UserId.fromUuidString(uuid));
                 } else {
                     handler.getContextConsumer().accept(ctx);
                 }
@@ -47,7 +47,7 @@ public class HandlerContextHandler {
         if (!ctx.pathParamMap().isEmpty()) {
             String uuid = ctx.pathParam("uuid");
             if (!uuid.isEmpty()) {
-                return UserId.fromUuid(uuid);
+                return UserId.fromUuidString(uuid);
             }
         }
 
