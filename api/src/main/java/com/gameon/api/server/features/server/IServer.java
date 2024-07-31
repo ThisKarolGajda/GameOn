@@ -37,4 +37,6 @@ public interface IServer extends IExtension {
     int getViewDistance();
 
     List<UserId> getWhitelistedPlayers();
+
+    List<UserId> getOnlinePlayers();
 }

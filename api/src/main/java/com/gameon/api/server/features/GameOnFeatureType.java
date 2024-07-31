@@ -4,5 +4,6 @@ public enum GameOnFeatureType {
     AUTHENTICATION,
     ECONOMY,
     SERVER,
+    PERMISSION,
     ;
 }

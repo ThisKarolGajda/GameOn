@@ -1,4 +1,4 @@
-package com.gameon.plugin.economy;
+package com.gameon.plugin.features.economy;
 
 import com.gameon.api.server.common.UserId;
 import com.gameon.api.server.features.economy.IEconomy;
@@ -12,10 +12,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VaultApiEconomy implements IEconomy {
+public class VaultEconomyApi implements IEconomy {
     private final Economy economy;
 
-    public VaultApiEconomy() {
+    public VaultEconomyApi() {
         this.economy = setupEconomy();
     }
 

@@ -5,6 +5,7 @@ import com.gameon.api.server.extension.IModuleInfo;
 import com.gameon.api.server.extension.ModuleInfoFactory;
 import com.gameon.api.server.features.GameOnFeatureType;
 import com.gameon.api.server.rest.IRestServer;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,5 +33,5 @@ public interface IGameOnApiServer {
         return enabledFeatures().contains(gameOnFeatureType);
     }
 
-    <E extends IExtension> E getExtension(GameOnFeatureType gameOnFeatureType);
+    <E extends IExtension> @Nullable E getExtension(GameOnFeatureType gameOnFeatureType);
 }

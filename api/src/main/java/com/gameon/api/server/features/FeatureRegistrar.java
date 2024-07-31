@@ -3,6 +3,7 @@ package com.gameon.api.server.features;
 import com.gameon.api.server.IGameOnApiServer;
 import com.gameon.api.server.extension.IExtension;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,11 +42,15 @@ public class FeatureRegistrar {
     }
 
     @SuppressWarnings("unchecked")
-    public <E extends IExtension> E getExtension(GameOnFeatureType gameOnFeatureType) {
+    public @Nullable <E extends IExtension> E getExtension(GameOnFeatureType gameOnFeatureType) {
         IExtension extension = features.get(gameOnFeatureType);
         if (extension != null) {
             return (E) extension;
         }
         return null;
+    }
+
+    public void dispose() {
+        features.clear();
     }
 }

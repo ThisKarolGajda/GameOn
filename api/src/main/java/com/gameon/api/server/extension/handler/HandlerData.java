@@ -16,7 +16,6 @@ public class HandlerData {
     private final HandlerType handlerType;
     private final HandlerAccessType accessType;
     private final Function<Context, UserId> ownerIdSupplier;
-
     private final Consumer<Context> contextConsumer;
     private final BiConsumer<Context, UserId> contextOwnerConsumer;
 

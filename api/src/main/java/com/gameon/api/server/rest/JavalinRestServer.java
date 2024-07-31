@@ -8,6 +8,7 @@ import com.gameon.api.server.extension.handler.HandlerContextHandler;
 import com.gameon.api.server.extension.handler.HandlerData;
 import com.gameon.api.server.features.GameOnFeatureType;
 import com.gameon.api.server.features.authentication.IAuthentication;
+import com.gameon.api.server.features.permission.IPermission;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
@@ -15,7 +16,6 @@ import io.javalin.router.Endpoint;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class JavalinRestServer implements IRestServer {
@@ -39,7 +39,9 @@ public class JavalinRestServer implements IRestServer {
             enableFeature(feature);
         }
 
-        app.get("/", ctx -> ctx.json(activeEndpoints));
+        app.get(DEFAULT_PATH + "/routes", ctx -> ctx.json(activeEndpoints));
+
+        app.get(DEFAULT_PATH + "/features", ctx -> ctx.json(apiServer.enabledFeatures().stream().map(Enum::name).toList()));
 
         app.exception(Exception.class, (e, ctx) ->
                 ctx.status(HttpStatus.INTERNAL_SERVER_ERROR).result(e.getMessage())
@@ -53,15 +55,13 @@ public class JavalinRestServer implements IRestServer {
         feature.getRoutes(settings.features().get(feature.getType())).forEach((handler) -> {
             String path = DEFAULT_PATH + "/" + feature.getDefaultPath() + "/" + handler.getPath();
             if (handler.getAccessType() != HandlerAccessType.EVERYONE) {
-                app.before(path, ctx -> handleAuthorization(ctx, handler));
+                app.before(path, ctx -> {
+                    handleAuthorization(ctx, handler);
+                });
+
             }
             app.addEndpoint(new Endpoint(handler.getHandlerType(), path, ctx -> {
-                try {
-                    HandlerContextHandler.handle(handler, ctx);
-                } catch (Exception exception) {
-                    ctx.status(HttpStatus.INTERNAL_SERVER_ERROR);
-                    ctx.json(Map.of("error", "An unexpected error occurred: " + exception.getMessage()));
-                }
+                HandlerContextHandler.handle(handler, ctx);
             }));
             activeEndpoints.add(path);
         });
@@ -103,7 +103,7 @@ public class JavalinRestServer implements IRestServer {
         String authHeader = ctx.header("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-            if (authentication != null && authentication.validateToken(token)) {
+            if (authentication.validateToken(token)) {
                 return Optional.of(authentication.getUserFromToken(token));
             }
         }
@@ -111,8 +111,12 @@ public class JavalinRestServer implements IRestServer {
     }
 
     private boolean isAdmin(UserId userId) {
-        //todo
-        return false;
+        IPermission permission = apiServer.getExtension(GameOnFeatureType.PERMISSION);
+        if (permission == null) {
+            return false;
+        }
+
+        return permission.isAdmin(userId);
     }
 
     @Override

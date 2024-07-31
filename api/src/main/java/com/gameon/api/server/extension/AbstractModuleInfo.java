@@ -1,13 +1,15 @@
 package com.gameon.api.server.extension;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +17,21 @@ public abstract class AbstractModuleInfo implements IModuleInfo {
     private final Gson gson;
 
     public AbstractModuleInfo() {
-        gson = new Gson();
+        String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormat);
+        gson = new com.google.gson.GsonBuilder()
+                .registerTypeAdapter(
+                        LocalDateTime.class,
+                        (JsonDeserializer<LocalDateTime>) (json, type, jsonDeserializationContext) ->
+                                ZonedDateTime.parse(json.getAsJsonPrimitive().getAsString()).toLocalDateTime()
+                )
+                .registerTypeAdapter(
+                        LocalDateTime.class,
+                        (JsonSerializer<LocalDateTime>) (localDate, type, jsonSerializationContext) ->
+                                new JsonPrimitive(formatter.format(localDate)
+                                ))
+                .setPrettyPrinting()
+                .create();
     }
 
     public Gson getGson() {
@@ -51,9 +67,9 @@ public abstract class AbstractModuleInfo implements IModuleInfo {
     /**
      * Generic method to deserialize JSON from the request body into a specified type.
      *
-     * @param ctx   The Javalin context.
-     * @param type  The type to deserialize into.
-     * @param <T>   The type parameter.
+     * @param ctx  The Javalin context.
+     * @param type The type to deserialize into.
+     * @param <T>  The type parameter.
      * @return The deserialized object or null if an error occurs.
      */
     public <T> T deserializeRequestBody(@NotNull Context ctx, Type type) {
@@ -67,7 +83,8 @@ public abstract class AbstractModuleInfo implements IModuleInfo {
 
     public <T> T deserializeAndCastRequestBody(@NotNull Context ctx) {
         try {
-            return getGson().fromJson(ctx.body(), new TypeToken<T>() {}.getType());
+            return getGson().fromJson(ctx.body(), new TypeToken<T>() {
+            }.getType());
         } catch (JsonSyntaxException e) {
             error(ctx, "Invalid request body");
             return null;
