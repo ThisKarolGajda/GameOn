@@ -14,9 +14,9 @@ GameOn Server Middleware is a comprehensive solution designed to connect Minecra
 
 ### Components
 - **Mobile Application**: Built with Flutter, connecting players to game servers.
-- **Game Server Plugin**: A Java plugin that integrates with Minecraft servers.
+- [THIS] **Game Server Plugin**: A Java plugin that integrates with Minecraft servers.
 - **Backend Server**: Utilizes Firebase for remote configuration, analytics, and crash reporting.
-- **REST API**: Facilitates communication between the mobile application and game servers.
+- [THIS] **REST API**: Facilitates communication between the mobile application and game servers.
 
 ### Communication Flow
 1. **Server Registration**: Servers register with Firebase Remote Config to be listed and monitored.
