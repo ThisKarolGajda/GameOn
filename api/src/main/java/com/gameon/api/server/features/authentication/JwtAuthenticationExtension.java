@@ -8,11 +8,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JwtAuthentication implements IAuthentication {
+public class JwtAuthenticationExtension implements ITokenAuthenticationExtension {
     private final JwtTokenManager jwtTokenManager;
     private final Map<String, UserId> pairingTokens;
 
-    public JwtAuthentication(String secretKey, long expirationTimeMillis) {
+    public JwtAuthenticationExtension(String secretKey, long expirationTimeMillis) {
         this.jwtTokenManager = new JwtTokenManager(secretKey, expirationTimeMillis);
         this.pairingTokens = new HashMap<>();
     }

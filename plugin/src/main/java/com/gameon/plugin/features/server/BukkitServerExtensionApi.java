@@ -1,22 +1,27 @@
 package com.gameon.plugin.features.server;
 
 import com.gameon.api.server.common.UserId;
-import com.gameon.api.server.features.server.IServer;
+import com.gameon.api.server.features.server.IServerExtension;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.plugin.Plugin;
 
 import java.lang.management.ManagementFactory;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BukkitServerApi implements IServer {
+public class BukkitServerExtensionApi implements IServerExtension {
     private final Server server;
+    private final Plugin plugin;
 
-    public BukkitServerApi() {
+    public BukkitServerExtensionApi(Plugin plugin) {
+        this.plugin = plugin;
         this.server = Bukkit.getServer();
     }
 
@@ -26,10 +31,9 @@ public class BukkitServerApi implements IServer {
         LocalDateTime now = LocalDateTime.now();
         return now.minus(Duration.ofMillis(jvmUpTime));
     }
-
     @Override
     public String getGameOnVersion() {
-        return server.getVersion();
+        return plugin.getDescription().getVersion();
     }
 
     @Override
@@ -116,6 +120,21 @@ public class BukkitServerApi implements IServer {
         return server.getOnlinePlayers().stream()
                 .map(player -> new UserId(player.getUniqueId(), player.getName()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getName() {
+        return server.getName();
+    }
+
+    @Override
+    public String getAddress() {
+        try {
+            InetAddress address = InetAddress.getLocalHost();
+            return address.getHostAddress();
+        } catch (UnknownHostException ignored) {
+            return "Unknown";
+        }
     }
 
     @Override

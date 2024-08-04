@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class PermissionInfo extends AbstractModuleInfo {
-    private IPermission permission;
+    private IPermissionExtension permission;
 
     @Override
     public GameOnFeatureType getType() {
@@ -24,7 +24,7 @@ public class PermissionInfo extends AbstractModuleInfo {
 
     @Override
     public Set<HandlerData> getRoutes(IExtension extension) {
-        permission = (IPermission) extension;
+        permission = (IPermissionExtension) extension;
         Set<HandlerData> routes = new HashSet<>();
 
         routes.add(new HandlerData("is-admin", HandlerType.GET, HandlerAccessType.EVERYONE, this::isAdmin));
@@ -33,7 +33,7 @@ public class PermissionInfo extends AbstractModuleInfo {
     }
 
     private void isAdmin(Context context) {
-        Map<String, Object> json = deserializeAndCastRequestBody(context);
+        Map<String, Object> json = deserialize(context);
         String uuid = (String) json.get("uuid");
         String nickname = (String) json.get("nickname");
         System.out.println("isAdmin: uuid=" + uuid + " nickname=" + nickname);

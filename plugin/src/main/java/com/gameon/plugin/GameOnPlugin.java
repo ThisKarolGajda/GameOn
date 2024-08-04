@@ -5,15 +5,16 @@ import com.gameon.api.server.IGameOnApiServer;
 import com.gameon.api.server.extension.IExtension;
 import com.gameon.api.server.features.FeatureRegistrar;
 import com.gameon.api.server.features.GameOnFeatureType;
-import com.gameon.api.server.features.authentication.JwtAuthentication;
+import com.gameon.api.server.features.authentication.JwtAuthenticationExtension;
 import com.gameon.api.server.rest.IRestServer;
 import com.gameon.api.server.rest.JavalinRestServer;
 import com.gameon.api.server.rest.RestServerSettings;
 import com.gameon.api.server.rest.RestServerStopReasonType;
 import com.gameon.plugin.command.GameOnCommand;
-import com.gameon.plugin.features.economy.VaultEconomyApi;
-import com.gameon.plugin.features.permission.BukkitPermissionApi;
-import com.gameon.plugin.features.server.BukkitServerApi;
+import com.gameon.plugin.features.economy.VaultEconomyExtensionApi;
+import com.gameon.plugin.features.news.NewsExtensionApi;
+import com.gameon.plugin.features.permission.BukkitPermissionExtensionApi;
+import com.gameon.plugin.features.server.BukkitServerExtensionApi;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,10 +27,11 @@ public class GameOnPlugin extends JavaPlugin implements IGameOnApiServer {
     @Override
     public void onEnable() {
         featureRegistrar = new FeatureRegistrar(this);
-        featureRegistrar.registerExtension(GameOnFeatureType.ECONOMY, new VaultEconomyApi());
-        featureRegistrar.registerExtension(GameOnFeatureType.AUTHENTICATION, new JwtAuthentication("TOTAL-SECRET-THAT-GOING-TO-MOVE-TO-CONFIG", 1000L * 60 * 60 * 24 * 30));
-        featureRegistrar.registerExtension(GameOnFeatureType.SERVER, new BukkitServerApi());
-        featureRegistrar.registerExtension(GameOnFeatureType.PERMISSION, new BukkitPermissionApi());
+        featureRegistrar.registerExtension(GameOnFeatureType.ECONOMY, new VaultEconomyExtensionApi());
+        featureRegistrar.registerExtension(GameOnFeatureType.AUTHENTICATION, new JwtAuthenticationExtension("TOTAL-SECRET-THAT-GOING-TO-MOVE-TO-CONFIG", 1000L * 60 * 60 * 24 * 30));
+        featureRegistrar.registerExtension(GameOnFeatureType.SERVER, new BukkitServerExtensionApi(this));
+        featureRegistrar.registerExtension(GameOnFeatureType.PERMISSION, new BukkitPermissionExtensionApi());
+        featureRegistrar.registerExtension(GameOnFeatureType.NEWS, new NewsExtensionApi(this));
 
         restServer = (JavalinRestServer) new JavalinRestServer().init(new RestServerSettings(8080, featureRegistrar.getFeatures()), this);
 

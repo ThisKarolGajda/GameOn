@@ -6,7 +6,7 @@ import com.gameon.api.server.extension.IExtension;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface IServer extends IExtension {
+public interface IServerExtension extends IExtension {
 
     LocalDateTime getUptime();
 
@@ -39,4 +39,8 @@ public interface IServer extends IExtension {
     List<UserId> getWhitelistedPlayers();
 
     List<UserId> getOnlinePlayers();
+
+    String getName();
+
+    String getAddress();
 }

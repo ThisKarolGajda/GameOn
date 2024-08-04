@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ServerInfo extends AbstractModuleInfo {
-    private IServer server;
+    private IServerExtension server;
 
     @Override
     public GameOnFeatureType getType() {
@@ -26,35 +26,51 @@ public class ServerInfo extends AbstractModuleInfo {
     @Override
     public Set<HandlerData> getRoutes(IExtension extension) {
         Set<HandlerData> routes = new HashSet<>();
-        server = (IServer) extension;
+        server = (IServerExtension) extension;
 
-        routes.add(new HandlerData("info", HandlerType.GET, HandlerAccessType.EVERYONE, this::getServerInfo));
+        routes.add(new HandlerData("all-info", HandlerType.GET, HandlerAccessType.EVERYONE, this::getAllServerInfo));
         routes.add(new HandlerData("uptime", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getServerUptime));
-        routes.add(new HandlerData("version", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getServerVersion));
-        routes.add(new HandlerData("max-players", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getMaxPlayers));
-        routes.add(new HandlerData("banned-users", HandlerType.GET, HandlerAccessType.ADMIN, this::getBannedUsers));
-        routes.add(new HandlerData("allowed-dimensions", HandlerType.GET, HandlerAccessType.ADMIN, this::getAllowedDimensions));
-        routes.add(new HandlerData("idle-timeout", HandlerType.GET, HandlerAccessType.ADMIN, this::getIdleTimeout));
-        routes.add(new HandlerData("enabled-packs", HandlerType.GET, HandlerAccessType.ADMIN, this::getEnabledPacks));
-        routes.add(new HandlerData("disabled-packs", HandlerType.GET, HandlerAccessType.ADMIN, this::getDisabledPacks));
+        routes.add(new HandlerData("version", HandlerType.GET, HandlerAccessType.EVERYONE, this::getServerVersion));
+        routes.add(new HandlerData("gameon-version", HandlerType.GET, HandlerAccessType.EVERYONE, this::getGameOnVersion));
+        routes.add(new HandlerData("max-players", HandlerType.GET, HandlerAccessType.EVERYONE, this::getMaxPlayers));
+        routes.add(new HandlerData("banned-users", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getBannedUsers));
+        routes.add(new HandlerData("allowed-dimensions", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getAllowedDimensions));
+        routes.add(new HandlerData("idle-timeout", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getIdleTimeout));
+        routes.add(new HandlerData("enabled-packs", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getEnabledPacks));
+        routes.add(new HandlerData("disabled-packs", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getDisabledPacks));
         routes.add(new HandlerData("motd", HandlerType.GET, HandlerAccessType.EVERYONE, this::getMotd));
-        routes.add(new HandlerData("default-game-mode", HandlerType.GET, HandlerAccessType.ADMIN, this::getDefaultGameMode));
-        routes.add(new HandlerData("simulation-distance", HandlerType.GET, HandlerAccessType.ADMIN, this::getSimulationDistance));
-        routes.add(new HandlerData("worlds", HandlerType.GET, HandlerAccessType.ADMIN, this::getWorlds));
-        routes.add(new HandlerData("view-distance", HandlerType.GET, HandlerAccessType.ADMIN, this::getViewDistance));
-        routes.add(new HandlerData("whitelisted-players", HandlerType.GET, HandlerAccessType.ADMIN, this::getWhitelistedPlayers));
+        routes.add(new HandlerData("default-game-mode", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getDefaultGameMode));
+        routes.add(new HandlerData("simulation-distance", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getSimulationDistance));
+        routes.add(new HandlerData("worlds", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getWorlds));
+        routes.add(new HandlerData("view-distance", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getViewDistance));
+        routes.add(new HandlerData("whitelisted-players", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getWhitelistedPlayers));
 
         return routes;
     }
 
-    private void getServerInfo(Context ctx) {
-        Map<String, Object> info = Map.of(
-                "version", server.getServerVersion(),
-                "maxPlayers", server.getMaxPlayers(),
-                "onlinePlayers", server.getOnlinePlayers(),
-                "motd", server.getMotd()
+    private void getAllServerInfo(Context ctx) {
+        Map<String, Object> entries = Map.ofEntries(
+                Map.entry("version", server.getServerVersion()),
+                Map.entry("gameonVersion", server.getGameOnVersion()),
+                Map.entry("maxPlayers", server.getMaxPlayers()),
+                Map.entry("onlinePlayers", server.getOnlinePlayers()),
+                Map.entry("motd", server.getMotd()),
+                Map.entry("uptime", server.getUptime()),
+                Map.entry("bannedUsers", server.getBannedUsers()),
+                Map.entry("allowedDimensions", server.getAllowedDimensions()),
+                Map.entry("idleTimeout", server.getIdleTimeOut()),
+                Map.entry("enabledPacks", server.getInitialEnabledPacks()),
+                Map.entry("disabledPacks", server.getInitialDisabledPacks()),
+                Map.entry("defaultGameMode", server.getDefaultGameMode()),
+                Map.entry("simulationDistance", server.getSimulationDistance()),
+                Map.entry("worlds", server.getWorlds()),
+                Map.entry("viewDistance", server.getViewDistance()),
+                Map.entry("whitelistedPlayers", server.getWhitelistedPlayers()),
+                Map.entry("name", server.getName()),
+                Map.entry("address", server.getAddress())
         );
-        success(ctx, info);
+
+        success(ctx, entries);
     }
 
     private void getServerUptime(Context ctx) {
@@ -65,6 +81,11 @@ public class ServerInfo extends AbstractModuleInfo {
     private void getServerVersion(Context ctx) {
         String version = server.getServerVersion();
         success(ctx, Map.of("version", version));
+    }
+
+    private void getGameOnVersion(Context ctx) {
+        String version = server.getGameOnVersion();
+        success(ctx, Map.of("gameonVersion", version));
     }
 
     private void getMaxPlayers(Context ctx) {

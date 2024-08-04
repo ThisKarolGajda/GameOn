@@ -21,16 +21,16 @@ public class AuthenticationInfo extends AbstractModuleInfo {
 
     @Override
     public Set<HandlerData> getRoutes(IExtension extension) {
-        IAuthentication authentication = (IAuthentication) extension;
+        ITokenAuthenticationExtension authentication = (ITokenAuthenticationExtension) extension;
 
         Set<HandlerData> routes = new HashSet<>();
 
         routes.add(new HandlerData(
                 "pair",
-                HandlerType.GET,
+                HandlerType.POST,
                 HandlerAccessType.EVERYONE,
                 ctx -> {
-                    Map<String, Object> json = deserializeAndCastRequestBody(ctx);
+                    Map<String, Object> json = deserialize(ctx);
                     String token = (String) json.get("token");
                     String nickname = (String) json.get("nickname");
                     UserId userId = authentication.validatePairingToken(nickname, token);
@@ -40,6 +40,32 @@ public class AuthenticationInfo extends AbstractModuleInfo {
                     } else {
                         error(ctx, "Invalid pairing token");
                     }
+                }
+        ));
+        routes.add(new HandlerData(
+                "info",
+                HandlerType.GET,
+                HandlerAccessType.AUTHORIZED,
+                ctx -> {
+                    String authHeader = ctx.header("Authorization");
+                    if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                        String token = authHeader.substring(7);
+                        if (authentication.validateToken(token)) {
+                            UserId id = authentication.getUserFromToken(token);
+                            if (id != null) {
+                                success(ctx, Map.of(
+                                        "uuid", id.uuid().toString(),
+                                        "nickname", id.username()
+                                ));
+                                return;
+                            }
+                        } else {
+                            error(ctx, "Expired token");
+                            return;
+                        }
+                    }
+
+                    error(ctx, "Invalid token");
                 }
         ));
 

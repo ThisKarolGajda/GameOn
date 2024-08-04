@@ -1,7 +1,7 @@
 package com.gameon.plugin.features.economy;
 
 import com.gameon.api.server.common.UserId;
-import com.gameon.api.server.features.economy.IEconomy;
+import com.gameon.api.server.features.economy.IEconomyExtension;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
@@ -12,10 +12,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VaultEconomyApi implements IEconomy {
+public class VaultEconomyExtensionApi implements IEconomyExtension {
     private final Economy economy;
 
-    public VaultEconomyApi() {
+    public VaultEconomyExtensionApi() {
         this.economy = setupEconomy();
     }
 

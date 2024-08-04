@@ -5,5 +5,6 @@ public enum GameOnFeatureType {
     ECONOMY,
     SERVER,
     PERMISSION,
+    NEWS,
     ;
 }

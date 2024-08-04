@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class EconomyInfo extends AbstractModuleInfo {
-    private IEconomy economy;
+    private IEconomyExtension economy;
 
     @Override
     public GameOnFeatureType getType() {
@@ -26,7 +26,7 @@ public class EconomyInfo extends AbstractModuleInfo {
 
     @Override
     public Set<HandlerData> getRoutes(IExtension extension) {
-        this.economy = (IEconomy) extension;
+        this.economy = (IEconomyExtension) extension;
         Set<HandlerData> routes = new HashSet<>();
 
         routes.add(new HandlerData("balance/{uuid}", HandlerType.GET, this::getBalance));
@@ -68,7 +68,7 @@ public class EconomyInfo extends AbstractModuleInfo {
 
     @Nullable
     private UserId getTransferFromUserId(Context ctx) {
-        Map<String, String> transferData = deserializeAndCastRequestBody(ctx);
+        Map<String, String> transferData = deserialize(ctx);
         String fromUuid = transferData.get("from");
         return getUserIdFromUuid(fromUuid);
     }

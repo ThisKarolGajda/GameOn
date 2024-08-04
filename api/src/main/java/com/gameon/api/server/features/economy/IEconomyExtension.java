@@ -5,7 +5,7 @@ import com.gameon.api.server.extension.IExtension;
 
 import java.util.Map;
 
-public interface IEconomy extends IExtension {
+public interface IEconomyExtension extends IExtension {
     /**
      * Retrieves the balance of the specified user.
      *
