@@ -1,11 +1,10 @@
 package com.gameon.api.server.features.economy;
 
 import com.gameon.api.server.common.UserId;
-import com.gameon.api.server.extension.AbstractModuleInfo;
+import com.gameon.api.server.extension.AbstractModule;
 import com.gameon.api.server.extension.IExtension;
 import com.gameon.api.server.extension.handler.HandlerAccessType;
 import com.gameon.api.server.extension.handler.HandlerData;
-import com.gameon.api.server.features.GameOnFeatureType;
 import com.google.gson.reflect.TypeToken;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
@@ -16,13 +15,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class EconomyInfo extends AbstractModuleInfo {
+public class EconomyModule extends AbstractModule {
     private IEconomyExtension economy;
-
-    @Override
-    public GameOnFeatureType getType() {
-        return GameOnFeatureType.ECONOMY;
-    }
 
     @Override
     public Set<HandlerData> getRoutes(IExtension extension) {

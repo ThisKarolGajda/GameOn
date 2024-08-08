@@ -1,23 +1,17 @@
 package com.gameon.api.server.features.authentication;
 
 import com.gameon.api.server.common.UserId;
-import com.gameon.api.server.extension.AbstractModuleInfo;
+import com.gameon.api.server.extension.AbstractModule;
 import com.gameon.api.server.extension.IExtension;
 import com.gameon.api.server.extension.handler.HandlerAccessType;
 import com.gameon.api.server.extension.handler.HandlerData;
-import com.gameon.api.server.features.GameOnFeatureType;
 import io.javalin.http.HandlerType;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class AuthenticationInfo extends AbstractModuleInfo {
-
-    @Override
-    public GameOnFeatureType getType() {
-        return GameOnFeatureType.AUTHENTICATION;
-    }
+public class AuthenticationModule extends AbstractModule {
 
     @Override
     public Set<HandlerData> getRoutes(IExtension extension) {

@@ -7,9 +7,4 @@ public interface IRestServer {
     void initialize(RestServerSettings settings, IGameOnApiServer apiServer);
 
     void stop(RestServerStopReasonType stopReason);
-
-    default IRestServer init(RestServerSettings settings, IGameOnApiServer apiServer) {
-        initialize(settings, apiServer);
-        return this;
-    }
 }

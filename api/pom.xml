@@ -6,7 +6,7 @@
 
     <groupId>com.gameon</groupId>
     <artifactId>api</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0+2</version>
 
     <repositories>
         <repository>

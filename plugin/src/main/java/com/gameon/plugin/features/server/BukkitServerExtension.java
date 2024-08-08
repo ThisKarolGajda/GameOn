@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BukkitServerExtensionApi implements IServerExtension {
+public class BukkitServerExtension implements IServerExtension {
     private final Server server;
     private final Plugin plugin;
 
-    public BukkitServerExtensionApi(Plugin plugin) {
+    public BukkitServerExtension(Plugin plugin) {
         this.plugin = plugin;
         this.server = Bukkit.getServer();
     }

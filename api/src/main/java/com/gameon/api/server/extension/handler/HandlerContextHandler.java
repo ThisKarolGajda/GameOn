@@ -10,14 +10,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import static com.gameon.api.server.extension.AbstractModuleInfo.error;
+import static com.gameon.api.server.extension.AbstractModule.error;
 
 public class HandlerContextHandler {
     public static CompletableFuture<Void> handleAsync(ITokenAuthenticationExtension authenticationInfo, HandlerData handler, Context ctx) {
         return CompletableFuture.runAsync(() -> {
-            System.out.println("1 - HandlerContextHandler");
             if (handler.getContextOwnerConsumer() != null) {
-                System.out.println(ctx + " --- " + handler.getContextOwnerConsumer());
                 UserId ownerId = handler.getOwnerIdSupplier() != null ? handler.getOwnerIdSupplier().apply(ctx) : null;
                 if (ownerId == null) {
                     Optional<UserId> optional = authenticateUser(authenticationInfo, ctx);
@@ -32,9 +30,7 @@ public class HandlerContextHandler {
                 return;
             }
 
-            System.out.println("2 - HandlerContextHandler");
-
-            if (!ctx.pathParamMap().isEmpty()) {
+            if (!ctx.pathParamMap().isEmpty() && ctx.pathParamMap().containsKey("uuid")) {
                 String uuid = ctx.pathParam("uuid");
                 if (!uuid.isEmpty()) {
                     if (handler.getContextOwnerConsumer() != null) {
@@ -45,14 +41,12 @@ public class HandlerContextHandler {
                     return;
                 }
             }
-            System.out.println("3 - HandlerContextHandler");
 
             if (handler.getContextConsumer() != null) {
                 handler.getContextConsumer().accept(ctx);
                 return;
             }
 
-            System.out.println("4 - HandlerContextHandler");
             ctx.status(500).json(Map.of("message", "Not found", "success", false));
         });
     }

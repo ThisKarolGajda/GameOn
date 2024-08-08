@@ -7,10 +7,9 @@ import org.bukkit.OfflinePlayer;
 
 import java.util.Objects;
 
-public class BukkitPermissionExtensionApi implements IPermissionExtension {
+public class BukkitPermissionExtension implements IPermissionExtension {
     @Override
     public boolean isAdmin(UserId userId) {
-        System.out.println("Is admin? " + userId);
         OfflinePlayer player = Bukkit.getOfflinePlayer(userId.uuid());
         if (!Objects.equals(player.getName(), userId.username())) {
             return false;

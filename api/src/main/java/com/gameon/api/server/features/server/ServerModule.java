@@ -1,11 +1,10 @@
 package com.gameon.api.server.features.server;
 
 import com.gameon.api.server.common.UserId;
-import com.gameon.api.server.extension.AbstractModuleInfo;
+import com.gameon.api.server.extension.AbstractModule;
 import com.gameon.api.server.extension.IExtension;
 import com.gameon.api.server.extension.handler.HandlerAccessType;
 import com.gameon.api.server.extension.handler.HandlerData;
-import com.gameon.api.server.features.GameOnFeatureType;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
 
@@ -15,13 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ServerInfo extends AbstractModuleInfo {
+public class ServerModule extends AbstractModule {
     private IServerExtension server;
-
-    @Override
-    public GameOnFeatureType getType() {
-        return GameOnFeatureType.SERVER;
-    }
 
     @Override
     public Set<HandlerData> getRoutes(IExtension extension) {

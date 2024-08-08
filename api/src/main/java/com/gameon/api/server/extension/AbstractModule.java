@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -12,10 +13,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractModuleInfo implements IModuleInfo {
+public abstract class AbstractModule implements IModuleInfo {
     private static Gson gson;
 
-    public AbstractModuleInfo() {
+    public AbstractModule() {
         String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormat);
         gson = new com.google.gson.GsonBuilder()
@@ -44,7 +45,7 @@ public abstract class AbstractModuleInfo implements IModuleInfo {
         )));
     }
 
-    public static void error(@NotNull Context context, @NotNull Map<String, Object> json) {
+    public static void error(@NotNull Context context, @NotNull Map<String, ?> json) {
         Map<String, Object> modifiableJson = new HashMap<>(json);
         modifiableJson.put("success", false);
         context.status(HttpStatus.INTERNAL_SERVER_ERROR).json(getGson().toJson(modifiableJson));
@@ -57,13 +58,13 @@ public abstract class AbstractModuleInfo implements IModuleInfo {
         )));
     }
 
-    public static void success(@NotNull Context context, @NotNull Map<String, Object> json) {
+    public static void success(@NotNull Context context, @NotNull Map<String, ?> json) {
         Map<String, Object> modifiableJson = new HashMap<>(json);
         modifiableJson.put("success", true);
         context.status(HttpStatus.OK).json(getGson().toJson(modifiableJson));
     }
 
-    public static <T> T deserialize(@NotNull Context ctx) {
+    public static <T> @Nullable T deserialize(@NotNull Context ctx) {
         try {
             return getGson().fromJson(ctx.body(), new TypeToken<T>() {
             }.getType());

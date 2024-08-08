@@ -1,11 +1,11 @@
-package com.gameon.plugin.database;
+package com.gameon.api.server.database;
 
+import com.gameon.api.server.GameOnInstance;
 import com.google.gson.*;
-import org.bukkit.plugin.Plugin;
 
 import java.io.*;
-import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -18,11 +18,11 @@ public class JSONDatabase<PK extends Serializable, T> {
     private final Class<T[]> clazz;
     private final boolean useMultiFiles;
     private final Gson gson;
-    private final Plugin plugin;
+    private final File dataFolder;
 
-    public JSONDatabase(Plugin plugin, String fileName, Class<T[]> clazz, boolean useMultiFiles) {
-        this.plugin = plugin;
+    public JSONDatabase(String fileName, Class<T[]> clazz, boolean useMultiFiles) {
         this.fileName = fileName;
+        this.dataFolder = GameOnInstance.getDataFolder();
         this.clazz = clazz;
         this.useMultiFiles = useMultiFiles;
         String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
@@ -32,6 +32,8 @@ public class JSONDatabase<PK extends Serializable, T> {
                         ZonedDateTime.parse(json.getAsJsonPrimitive().getAsString()).toLocalDateTime())
                 .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (localDate, type, jsonSerializationContext) ->
                         new JsonPrimitive(formatter.format(localDate)))
+                .registerTypeAdapter(Class.class, new ClassTypeAdapter())
+                .excludeFieldsWithModifiers(Modifier.STATIC, Modifier.TRANSIENT)
                 .setPrettyPrinting()
                 .create();
         initialize();
@@ -65,7 +67,7 @@ public class JSONDatabase<PK extends Serializable, T> {
     }
 
     private void loadFromMultipleFiles() {
-        File directory = new File(plugin.getDataFolder(), fileName + "s");
+        File directory = new File(dataFolder, fileName + "s");
         if (!directory.exists()) {
             directory.mkdirs();
         }
@@ -81,7 +83,7 @@ public class JSONDatabase<PK extends Serializable, T> {
     }
 
     private void loadFromSingleFile() {
-        File file = new File(plugin.getDataFolder(), fileName + ".json");
+        File file = new File(dataFolder, fileName + ".json");
         if (file.exists()) {
             try (Reader reader = new FileReader(file)) {
                 T[] entities = gson.fromJson(reader, (Class<T[]>) clazz);
@@ -94,11 +96,10 @@ public class JSONDatabase<PK extends Serializable, T> {
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JsonSyntaxException e) {
-                plugin.getLogger().severe("Failed to parse JSON: " + e.getMessage());
+                e.printStackTrace();
             }
         } else {
             try {
-                File dataFolder = plugin.getDataFolder();
                 if (!dataFolder.exists()) {
                     dataFolder.mkdirs();
                 }
@@ -131,7 +132,7 @@ public class JSONDatabase<PK extends Serializable, T> {
     }
 
     private void saveEntityToFile(T entity, PK id) {
-        File directory = new File(plugin.getDataFolder(), fileName + "s");
+        File directory = new File(dataFolder, fileName + "s");
         File entityFile = new File(directory, id + ".json");
         try (Writer writer = new FileWriter(entityFile)) {
             gson.toJson(entity, writer);
@@ -141,7 +142,7 @@ public class JSONDatabase<PK extends Serializable, T> {
     }
 
     private void saveAllToSingleFile() {
-        File file = new File(plugin.getDataFolder(), fileName + ".json");
+        File file = new File(dataFolder, fileName + ".json");
         try (Writer writer = new FileWriter(file)) {
             gson.toJson(cache.values(), writer);
         } catch (IOException e) {
@@ -151,7 +152,7 @@ public class JSONDatabase<PK extends Serializable, T> {
 
     private void deleteFromFile(PK id) {
         if (useMultiFiles) {
-            File directory = new File(plugin.getDataFolder(), fileName + "s");
+            File directory = new File(dataFolder, fileName + "s");
             File entityFile = new File(directory, id + ".json");
             if (entityFile.exists()) {
                 entityFile.delete();

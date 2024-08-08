@@ -1,23 +1,17 @@
 package com.gameon.api.server.features.news;
 
 import com.gameon.api.server.common.UserId;
-import com.gameon.api.server.extension.AbstractModuleInfo;
+import com.gameon.api.server.extension.AbstractModule;
 import com.gameon.api.server.extension.IExtension;
 import com.gameon.api.server.extension.handler.HandlerAccessType;
 import com.gameon.api.server.extension.handler.HandlerData;
-import com.gameon.api.server.features.GameOnFeatureType;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
 
 import java.util.*;
 
-public class NewsInfo extends AbstractModuleInfo {
+public class NewsModule extends AbstractModule {
     private INewsExtension extension;
-
-    @Override
-    public GameOnFeatureType getType() {
-        return GameOnFeatureType.NEWS;
-    }
 
     @Override
     public Set<HandlerData> getRoutes(IExtension extension) {

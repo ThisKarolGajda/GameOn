@@ -12,10 +12,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VaultEconomyExtensionApi implements IEconomyExtension {
+public class VaultEconomyExtension implements IEconomyExtension {
     private final Economy economy;
 
-    public VaultEconomyExtensionApi() {
+    public VaultEconomyExtension() {
         this.economy = setupEconomy();
     }
 
