@@ -4,7 +4,7 @@ import com.gameon.api.server.common.UserId;
 import com.gameon.api.server.extension.AbstractModule;
 import com.gameon.api.server.extension.IExtension;
 import com.gameon.api.server.extension.handler.HandlerAccessType;
-import com.gameon.api.server.extension.handler.HandlerData;
+import com.gameon.api.server.extension.handler.EndpointHandlerData;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
 
@@ -18,26 +18,26 @@ public class ServerModule extends AbstractModule {
     private IServerExtension server;
 
     @Override
-    public Set<HandlerData> getRoutes(IExtension extension) {
-        Set<HandlerData> routes = new HashSet<>();
+    public Set<EndpointHandlerData> getEndpoints(IExtension extension) {
+        Set<EndpointHandlerData> routes = new HashSet<>();
         server = (IServerExtension) extension;
 
-        routes.add(new HandlerData("all-info", HandlerType.GET, HandlerAccessType.EVERYONE, this::getAllServerInfo));
-        routes.add(new HandlerData("uptime", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getServerUptime));
-        routes.add(new HandlerData("version", HandlerType.GET, HandlerAccessType.EVERYONE, this::getServerVersion));
-        routes.add(new HandlerData("gameon-version", HandlerType.GET, HandlerAccessType.EVERYONE, this::getGameOnVersion));
-        routes.add(new HandlerData("max-players", HandlerType.GET, HandlerAccessType.EVERYONE, this::getMaxPlayers));
-        routes.add(new HandlerData("banned-users", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getBannedUsers));
-        routes.add(new HandlerData("allowed-dimensions", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getAllowedDimensions));
-        routes.add(new HandlerData("idle-timeout", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getIdleTimeout));
-        routes.add(new HandlerData("enabled-packs", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getEnabledPacks));
-        routes.add(new HandlerData("disabled-packs", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getDisabledPacks));
-        routes.add(new HandlerData("motd", HandlerType.GET, HandlerAccessType.EVERYONE, this::getMotd));
-        routes.add(new HandlerData("default-game-mode", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getDefaultGameMode));
-        routes.add(new HandlerData("simulation-distance", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getSimulationDistance));
-        routes.add(new HandlerData("worlds", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getWorlds));
-        routes.add(new HandlerData("view-distance", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getViewDistance));
-        routes.add(new HandlerData("whitelisted-players", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getWhitelistedPlayers));
+        routes.add(new EndpointHandlerData("all-info", HandlerType.GET, HandlerAccessType.EVERYONE, this::getAllServerInfo));
+        routes.add(new EndpointHandlerData("uptime", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getServerUptime));
+        routes.add(new EndpointHandlerData("version", HandlerType.GET, HandlerAccessType.EVERYONE, this::getServerVersion));
+        routes.add(new EndpointHandlerData("gameon-version", HandlerType.GET, HandlerAccessType.EVERYONE, this::getGameOnVersion));
+        routes.add(new EndpointHandlerData("max-players", HandlerType.GET, HandlerAccessType.EVERYONE, this::getMaxPlayers));
+        routes.add(new EndpointHandlerData("banned-users", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getBannedUsers));
+        routes.add(new EndpointHandlerData("allowed-dimensions", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getAllowedDimensions));
+        routes.add(new EndpointHandlerData("idle-timeout", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getIdleTimeout));
+        routes.add(new EndpointHandlerData("enabled-packs", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getEnabledPacks));
+        routes.add(new EndpointHandlerData("disabled-packs", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getDisabledPacks));
+        routes.add(new EndpointHandlerData("motd", HandlerType.GET, HandlerAccessType.EVERYONE, this::getMotd));
+        routes.add(new EndpointHandlerData("default-game-mode", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getDefaultGameMode));
+        routes.add(new EndpointHandlerData("simulation-distance", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getSimulationDistance));
+        routes.add(new EndpointHandlerData("worlds", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getWorlds));
+        routes.add(new EndpointHandlerData("view-distance", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getViewDistance));
+        routes.add(new EndpointHandlerData("whitelisted-players", HandlerType.GET, HandlerAccessType.AUTHORIZED, this::getWhitelistedPlayers));
 
         return routes;
     }

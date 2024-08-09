@@ -1,7 +1,7 @@
 package com.gameon.api.server;
 
 import com.gameon.api.server.features.FeatureRegistry;
-import com.gameon.api.server.rest.IRestServer;
+import com.gameon.api.server.server.IServer;
 
 import java.io.File;
 import java.util.logging.Logger;
@@ -12,7 +12,7 @@ public interface IGameOnApiServer {
 
     Logger getLogger();
 
-    IRestServer getRestServer();
+    IServer getGameOnServer();
 
     FeatureRegistry getFeatureRegistrar();
 

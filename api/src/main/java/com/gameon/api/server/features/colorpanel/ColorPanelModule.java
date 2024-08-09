@@ -4,7 +4,7 @@ import com.gameon.api.server.GameOnInstance;
 import com.gameon.api.server.extension.AbstractModule;
 import com.gameon.api.server.extension.IExtension;
 import com.gameon.api.server.extension.handler.HandlerAccessType;
-import com.gameon.api.server.extension.handler.HandlerData;
+import com.gameon.api.server.extension.handler.EndpointHandlerData;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
 
@@ -20,8 +20,8 @@ public class ColorPanelModule extends AbstractModule {
     );
 
     @Override
-    public Set<HandlerData> getRoutes(IExtension extension) {
-        return Set.of(new HandlerData(
+    public Set<EndpointHandlerData> getEndpoints(IExtension extension) {
+        return Set.of(new EndpointHandlerData(
                 "colors",
                 HandlerType.GET,
                 HandlerAccessType.EVERYONE,

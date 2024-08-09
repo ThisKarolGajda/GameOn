@@ -4,6 +4,8 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
+import io.javalin.websocket.WsContext;
+import io.javalin.websocket.WsMessageContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,10 +13,13 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class AbstractModule implements IModuleInfo {
     private static Gson gson;
+    private final Set<WsContext> connectedClients = new HashSet<>();
 
     public AbstractModule() {
         String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
@@ -71,6 +76,36 @@ public abstract class AbstractModule implements IModuleInfo {
         } catch (JsonSyntaxException e) {
             error(ctx, "Invalid request body");
             return null;
+        }
+    }
+
+    public static <T> @Nullable T deserialize(@NotNull WsMessageContext ctx) {
+        try {
+            return getGson().fromJson(ctx.message(), new TypeToken<T>() {}.getType());
+        } catch (JsonSyntaxException e) {
+            error(ctx, "Invalid message format");
+            return null;
+        }
+    }
+
+    private static void error(WsMessageContext ctx, String message) {
+        ctx.send("{\"error\": \"" + message + "\"}");
+    }
+
+    public void addClient(WsContext ctx) {
+        connectedClients.add(ctx);
+        System.out.println("Added client " + ctx + " to " + connectedClients.size() + " clients, for " + getDefaultPath());
+    }
+
+    public void removeClient(WsContext ctx) {
+        connectedClients.remove(ctx);
+        System.out.println("Removed client " + ctx + " from " + connectedClients.size() + " clients, for " + getDefaultPath());
+    }
+
+    public void broadcastWebSocketMessage(Object messageObject) {
+        String jsonMessage = gson.toJson(messageObject);
+        for (WsContext client : connectedClients) {
+            client.send(jsonMessage);
         }
     }
 }

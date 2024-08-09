@@ -4,7 +4,7 @@ import com.gameon.api.server.common.UserId;
 import com.gameon.api.server.extension.AbstractModule;
 import com.gameon.api.server.extension.IExtension;
 import com.gameon.api.server.extension.handler.HandlerAccessType;
-import com.gameon.api.server.extension.handler.HandlerData;
+import com.gameon.api.server.extension.handler.EndpointHandlerData;
 import com.google.gson.reflect.TypeToken;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
@@ -19,16 +19,16 @@ public class EconomyModule extends AbstractModule {
     private IEconomyExtension economy;
 
     @Override
-    public Set<HandlerData> getRoutes(IExtension extension) {
+    public Set<EndpointHandlerData> getEndpoints(IExtension extension) {
         this.economy = (IEconomyExtension) extension;
-        Set<HandlerData> routes = new HashSet<>();
+        Set<EndpointHandlerData> routes = new HashSet<>();
 
-        routes.add(new HandlerData("balance/{uuid}", HandlerType.GET, this::getBalance));
-        routes.add(new HandlerData("deposit/{uuid}", HandlerType.POST, HandlerAccessType.ADMIN, this::deposit));
-        routes.add(new HandlerData("withdraw/{uuid}", HandlerType.POST, HandlerAccessType.ADMIN, this::withdraw));
-        routes.add(new HandlerData("transfer", HandlerType.POST, HandlerAccessType.OWNER, this::getTransferFromUserId, this::transfer));
-        routes.add(new HandlerData("set/{uuid}", HandlerType.POST, HandlerAccessType.ADMIN, this::setBalance));
-        routes.add(new HandlerData("all", HandlerType.GET, this::getAllBalances));
+        routes.add(new EndpointHandlerData("balance/{uuid}", HandlerType.GET, this::getBalance));
+        routes.add(new EndpointHandlerData("deposit/{uuid}", HandlerType.POST, HandlerAccessType.ADMIN, this::deposit));
+        routes.add(new EndpointHandlerData("withdraw/{uuid}", HandlerType.POST, HandlerAccessType.ADMIN, this::withdraw));
+        routes.add(new EndpointHandlerData("transfer", HandlerType.POST, HandlerAccessType.OWNER, this::getTransferFromUserId, this::transfer));
+        routes.add(new EndpointHandlerData("set/{uuid}", HandlerType.POST, HandlerAccessType.ADMIN, this::setBalance));
+        routes.add(new EndpointHandlerData("all", HandlerType.GET, this::getAllBalances));
 
         return routes;
     }

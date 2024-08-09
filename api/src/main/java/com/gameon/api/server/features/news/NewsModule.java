@@ -4,7 +4,7 @@ import com.gameon.api.server.common.UserId;
 import com.gameon.api.server.extension.AbstractModule;
 import com.gameon.api.server.extension.IExtension;
 import com.gameon.api.server.extension.handler.HandlerAccessType;
-import com.gameon.api.server.extension.handler.HandlerData;
+import com.gameon.api.server.extension.handler.EndpointHandlerData;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
 
@@ -14,32 +14,32 @@ public class NewsModule extends AbstractModule {
     private INewsExtension extension;
 
     @Override
-    public Set<HandlerData> getRoutes(IExtension extension) {
+    public Set<EndpointHandlerData> getEndpoints(IExtension extension) {
         this.extension = (INewsExtension) extension;
-        Set<HandlerData> routes = new HashSet<>();
+        Set<EndpointHandlerData> routes = new HashSet<>();
 
-        routes.add(new HandlerData(
+        routes.add(new EndpointHandlerData(
                 "latest",
                 HandlerType.GET,
                 HandlerAccessType.AUTHORIZED,
                 this::getLatestNews
         ));
 
-        routes.add(new HandlerData(
+        routes.add(new EndpointHandlerData(
                 "all",
                 HandlerType.GET,
                 HandlerAccessType.AUTHORIZED,
                 this::getAllNews
         ));
 
-        routes.add(new HandlerData(
+        routes.add(new EndpointHandlerData(
                 "create",
                 HandlerType.POST,
                 HandlerAccessType.ADMIN,
                 this::createPost
         ));
 
-        routes.add(new HandlerData(
+        routes.add(new EndpointHandlerData(
                 "delete/{id}",
                 HandlerType.DELETE,
                 HandlerAccessType.ADMIN,

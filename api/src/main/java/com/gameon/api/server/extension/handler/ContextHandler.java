@@ -3,6 +3,7 @@ package com.gameon.api.server.extension.handler;
 import com.gameon.api.server.common.UserId;
 import com.gameon.api.server.features.authentication.ITokenAuthenticationExtension;
 import io.javalin.http.Context;
+import io.javalin.websocket.WsMessageContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,8 +13,8 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.gameon.api.server.extension.AbstractModule.error;
 
-public class HandlerContextHandler {
-    public static CompletableFuture<Void> handleAsync(ITokenAuthenticationExtension authenticationInfo, HandlerData handler, Context ctx) {
+public class ContextHandler {
+    public static CompletableFuture<Void> handleAsync(ITokenAuthenticationExtension authenticationInfo, EndpointHandlerData handler, Context ctx) {
         return CompletableFuture.runAsync(() -> {
             if (handler.getContextOwnerConsumer() != null) {
                 UserId ownerId = handler.getOwnerIdSupplier() != null ? handler.getOwnerIdSupplier().apply(ctx) : null;
@@ -51,8 +52,45 @@ public class HandlerContextHandler {
         });
     }
 
+    public static void handle(ITokenAuthenticationExtension authenticationInfo, WebSocketHandlerData handler, WsMessageContext ctx) {
+        if (handler.getMessageOwnerConsumer() != null) {
+            UserId ownerId = handler.getOwnerIdSupplier() != null ? handler.getOwnerIdSupplier().apply(ctx) : null;
+            if (ownerId == null) {
+                Optional<UserId> optional = authenticateUser(authenticationInfo, ctx);
+                if (optional.isEmpty()) {
+                    ctx.closeSession();
+                    return;
+                }
+                ownerId = optional.get();
+            }
+
+            handler.getMessageOwnerConsumer().accept(ctx, ownerId);
+            return;
+        }
+
+        ctx.send("No valid handler for the message.");
+    }
+
+    @NotNull
+    public static Optional<UserId> authenticateUser(ITokenAuthenticationExtension authentication, @NotNull WsMessageContext ctx) {
+        String authHeader = ctx.header("Authorization");
+        System.out.println("header: " + authHeader);
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            if (authentication.validateToken(token)) {
+                return Optional.of(authentication.getUserFromToken(token));
+            } else {
+                ctx.send("Expired token");
+            }
+        } else {
+            ctx.send("Invalid token");
+        }
+
+        return Optional.empty();
+    }
+
     @Nullable
-    public static UserId getUserIdFromContext(HandlerData handler, Context ctx) {
+    public static UserId getUserIdFromContext(EndpointHandlerData handler, Context ctx) {
         if (ctx == null) {
             return null;
         }

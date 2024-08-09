@@ -4,7 +4,7 @@ import com.gameon.api.server.common.UserId;
 import com.gameon.api.server.extension.AbstractModule;
 import com.gameon.api.server.extension.IExtension;
 import com.gameon.api.server.extension.handler.HandlerAccessType;
-import com.gameon.api.server.extension.handler.HandlerData;
+import com.gameon.api.server.extension.handler.EndpointHandlerData;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
 
@@ -16,18 +16,18 @@ public class DailyRewardModule extends AbstractModule {
     private IDailyRewardExtension dailyRewardExtension;
 
     @Override
-    public Set<HandlerData> getRoutes(IExtension extension) {
+    public Set<EndpointHandlerData> getEndpoints(IExtension extension) {
         dailyRewardExtension = (IDailyRewardExtension) extension;
-        Set<HandlerData> routes = new HashSet<>();
+        Set<EndpointHandlerData> routes = new HashSet<>();
 
-        routes.add(new HandlerData(
+        routes.add(new EndpointHandlerData(
                 "has",
                 HandlerType.GET,
                 HandlerAccessType.AUTHORIZED,
                 this::hasDailyReward
         ));
 
-        routes.add(new HandlerData(
+        routes.add(new EndpointHandlerData(
                 "claim",
                 HandlerType.GET,
                 HandlerAccessType.AUTHORIZED,

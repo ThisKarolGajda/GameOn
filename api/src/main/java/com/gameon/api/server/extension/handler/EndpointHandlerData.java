@@ -11,7 +11,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class HandlerData {
+public class EndpointHandlerData implements IHandlerData {
     private final String path;
     private final HandlerType handlerType;
     private final HandlerAccessType accessType;
@@ -19,7 +19,7 @@ public class HandlerData {
     private final Consumer<Context> contextConsumer;
     private final BiConsumer<Context, UserId> contextOwnerConsumer;
 
-    public HandlerData(String path, HandlerType handlerType, HandlerAccessType accessType, Function<Context, UserId> ownerIdSupplier, Consumer<Context> contextConsumer, BiConsumer<Context, UserId> contextOwnerConsumer) {
+    public EndpointHandlerData(String path, HandlerType handlerType, HandlerAccessType accessType, Function<Context, UserId> ownerIdSupplier, Consumer<Context> contextConsumer, BiConsumer<Context, UserId> contextOwnerConsumer) {
         this.path = path;
         this.handlerType = handlerType;
         this.accessType = accessType;
@@ -28,35 +28,35 @@ public class HandlerData {
         this.contextOwnerConsumer = contextOwnerConsumer;
     }
 
-    public HandlerData(String path, HandlerType handlerType, Function<Context, UserId> ownerIdSupplier, Consumer<Context> contextConsumer) {
+    public EndpointHandlerData(String path, HandlerType handlerType, Function<Context, UserId> ownerIdSupplier, Consumer<Context> contextConsumer) {
         this(path, handlerType, determineAccessType(path), ownerIdSupplier, contextConsumer, null);
     }
 
-    public HandlerData(String path, HandlerType handlerType, HandlerAccessType accessType, Function<Context, UserId> ownerIdSupplier, Consumer<Context> contextConsumer) {
+    public EndpointHandlerData(String path, HandlerType handlerType, HandlerAccessType accessType, Function<Context, UserId> ownerIdSupplier, Consumer<Context> contextConsumer) {
         this(path, handlerType, accessType, ownerIdSupplier, contextConsumer, null);
     }
 
-    public HandlerData(String path, HandlerType handlerType, HandlerAccessType type, Consumer<Context> contextConsumer) {
+    public EndpointHandlerData(String path, HandlerType handlerType, HandlerAccessType type, Consumer<Context> contextConsumer) {
         this(path, handlerType, type, null, contextConsumer, null);
     }
 
-    public HandlerData(String path, HandlerType handlerType, Consumer<Context> contextConsumer) {
+    public EndpointHandlerData(String path, HandlerType handlerType, Consumer<Context> contextConsumer) {
         this(path, handlerType, (Function<Context, UserId>) null, contextConsumer);
     }
 
-    public HandlerData(String path, HandlerType handlerType, Function<Context, UserId> ownerIdSupplier, BiConsumer<Context, UserId> contextOwnerConsumer) {
+    public EndpointHandlerData(String path, HandlerType handlerType, Function<Context, UserId> ownerIdSupplier, BiConsumer<Context, UserId> contextOwnerConsumer) {
         this(path, handlerType, determineAccessType(path), ownerIdSupplier, null, contextOwnerConsumer);
     }
 
-    public HandlerData(String path, HandlerType handlerType, HandlerAccessType accessType, Function<Context, UserId> ownerIdSupplier, BiConsumer<Context, UserId> contextOwnerConsumer) {
+    public EndpointHandlerData(String path, HandlerType handlerType, HandlerAccessType accessType, Function<Context, UserId> ownerIdSupplier, BiConsumer<Context, UserId> contextOwnerConsumer) {
         this(path, handlerType, accessType, ownerIdSupplier, null, contextOwnerConsumer);
     }
 
-    public HandlerData(String path, HandlerType handlerType, HandlerAccessType type, BiConsumer<Context, UserId> contextOwnerConsumer) {
+    public EndpointHandlerData(String path, HandlerType handlerType, HandlerAccessType type, BiConsumer<Context, UserId> contextOwnerConsumer) {
         this(path, handlerType, type, null, null, contextOwnerConsumer);
     }
 
-    public HandlerData(String path, HandlerType handlerType, BiConsumer<Context, UserId> contextOwnerConsumer) {
+    public EndpointHandlerData(String path, HandlerType handlerType, BiConsumer<Context, UserId> contextOwnerConsumer) {
         this(path, handlerType, (Function<Context, UserId>) null, contextOwnerConsumer);
     }
 
@@ -92,7 +92,7 @@ public class HandlerData {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof HandlerData that)) return false;
+        if (!(o instanceof EndpointHandlerData that)) return false;
         return Objects.equals(path, that.path) && handlerType == that.handlerType && accessType == that.accessType;
     }
 

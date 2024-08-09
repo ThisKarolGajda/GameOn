@@ -4,7 +4,7 @@ import com.gameon.api.server.GameOnInstance;
 import com.gameon.api.server.extension.AbstractModule;
 import com.gameon.api.server.extension.IExtension;
 import com.gameon.api.server.extension.handler.HandlerAccessType;
-import com.gameon.api.server.extension.handler.HandlerData;
+import com.gameon.api.server.extension.handler.EndpointHandlerData;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
 
@@ -14,24 +14,24 @@ import java.util.Set;
 
 public class AdminSettingsModule extends AbstractModule {
     @Override
-    public Set<HandlerData> getRoutes(IExtension extension) {
-        Set<HandlerData> routes = new HashSet<>();
+    public Set<EndpointHandlerData> getEndpoints(IExtension extension) {
+        Set<EndpointHandlerData> routes = new HashSet<>();
 
-        routes.add(new HandlerData(
+        routes.add(new EndpointHandlerData(
                 "type/{key}",
                 HandlerType.GET,
                 HandlerAccessType.ADMIN,
                 this::getType
         ));
 
-        routes.add(new HandlerData(
+        routes.add(new EndpointHandlerData(
                 "value/{key}",
                 HandlerType.GET,
                 HandlerAccessType.ADMIN,
                 this::getValue
         ));
 
-        routes.add(new HandlerData(
+        routes.add(new EndpointHandlerData(
                 "value/{key}",
                 HandlerType.POST,
                 HandlerAccessType.ADMIN,

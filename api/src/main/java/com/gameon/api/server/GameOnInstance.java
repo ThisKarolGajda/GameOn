@@ -4,7 +4,7 @@ import com.gameon.api.server.adminsettings.AdminSettingsModule;
 import com.gameon.api.server.adminsettings.AdminSettingsRegistry;
 import com.gameon.api.server.features.FeatureRegistry;
 import com.gameon.api.server.features.colorpanel.ColorPanelModule;
-import com.gameon.api.server.rest.IRestServer;
+import com.gameon.api.server.server.IServer;
 import org.jetbrains.annotations.Contract;
 
 import java.io.File;
@@ -41,8 +41,8 @@ public class GameOnInstance {
         return getInstance().getLogger();
     }
 
-    public static IRestServer getRestServer() {
-        return getInstance().getRestServer();
+    public static IServer getRestServer() {
+        return getInstance().getGameOnServer();
     }
 
     public static FeatureRegistry getFeatureRegistrar() {

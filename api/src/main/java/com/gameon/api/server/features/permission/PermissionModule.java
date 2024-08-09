@@ -4,7 +4,7 @@ import com.gameon.api.server.common.UserId;
 import com.gameon.api.server.extension.AbstractModule;
 import com.gameon.api.server.extension.IExtension;
 import com.gameon.api.server.extension.handler.HandlerAccessType;
-import com.gameon.api.server.extension.handler.HandlerData;
+import com.gameon.api.server.extension.handler.EndpointHandlerData;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
 
@@ -17,11 +17,11 @@ public class PermissionModule extends AbstractModule {
     private IPermissionExtension permission;
 
     @Override
-    public Set<HandlerData> getRoutes(IExtension extension) {
+    public Set<EndpointHandlerData> getEndpoints(IExtension extension) {
         permission = (IPermissionExtension) extension;
-        Set<HandlerData> routes = new HashSet<>();
+        Set<EndpointHandlerData> routes = new HashSet<>();
 
-        routes.add(new HandlerData("is-admin", HandlerType.GET, HandlerAccessType.EVERYONE, this::isAdmin));
+        routes.add(new EndpointHandlerData("is-admin", HandlerType.GET, HandlerAccessType.EVERYONE, this::isAdmin));
 
         return routes;
     }

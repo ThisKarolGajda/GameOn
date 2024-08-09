@@ -4,7 +4,7 @@ import com.gameon.api.server.common.UserId;
 import com.gameon.api.server.extension.AbstractModule;
 import com.gameon.api.server.extension.IExtension;
 import com.gameon.api.server.extension.handler.HandlerAccessType;
-import com.gameon.api.server.extension.handler.HandlerData;
+import com.gameon.api.server.extension.handler.EndpointHandlerData;
 import io.javalin.http.HandlerType;
 
 import java.util.HashSet;
@@ -14,12 +14,12 @@ import java.util.Set;
 public class AuthenticationModule extends AbstractModule {
 
     @Override
-    public Set<HandlerData> getRoutes(IExtension extension) {
+    public Set<EndpointHandlerData> getEndpoints(IExtension extension) {
         ITokenAuthenticationExtension authentication = (ITokenAuthenticationExtension) extension;
 
-        Set<HandlerData> routes = new HashSet<>();
+        Set<EndpointHandlerData> routes = new HashSet<>();
 
-        routes.add(new HandlerData(
+        routes.add(new EndpointHandlerData(
                 "pair",
                 HandlerType.POST,
                 HandlerAccessType.EVERYONE,
@@ -36,7 +36,7 @@ public class AuthenticationModule extends AbstractModule {
                     }
                 }
         ));
-        routes.add(new HandlerData(
+        routes.add(new EndpointHandlerData(
                 "info",
                 HandlerType.GET,
                 HandlerAccessType.AUTHORIZED,
