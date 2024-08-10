@@ -8,10 +8,12 @@ import com.gameon.api.server.features.authentication.AuthenticationModule;
 import com.gameon.api.server.features.authentication.JwtAuthenticationExtension;
 import com.gameon.api.server.features.dailyreward.DailyRewardModule;
 import com.gameon.api.server.features.economy.EconomyModule;
+import com.gameon.api.server.features.news.NewsExtension;
 import com.gameon.api.server.features.news.NewsModule;
 import com.gameon.api.server.features.permission.PermissionModule;
 import com.gameon.api.server.features.playerchat.PlayerChatModule;
 import com.gameon.api.server.features.server.ServerModule;
+import com.gameon.api.server.features.stats.StatsModule;
 import com.gameon.api.server.server.IServer;
 import com.gameon.api.server.server.JavalinServer;
 import com.gameon.api.server.server.ServerSettings;
@@ -19,15 +21,17 @@ import com.gameon.api.server.server.ServerStopReasonType;
 import com.gameon.plugin.command.GameOnCommand;
 import com.gameon.plugin.features.dailyreward.DailyRewardExtension;
 import com.gameon.plugin.features.economy.VaultEconomyExtension;
-import com.gameon.api.server.features.news.NewsExtension;
 import com.gameon.plugin.features.permission.BukkitPermissionExtension;
 import com.gameon.plugin.features.playerchat.PlayerChatExtension;
 import com.gameon.plugin.features.server.BukkitServerExtension;
+import com.gameon.plugin.features.stats.StatsExtension;
+import com.gameon.plugin.features.stats.StatsListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class GameOnPlugin extends JavaPlugin implements IGameOnApiServer {
     private JavalinServer server;
     private FeatureRegistry featureRegistry;
+    private StatsExtension statsExtension;
 
     @Override
     public void onEnable() {
@@ -51,12 +55,18 @@ public class GameOnPlugin extends JavaPlugin implements IGameOnApiServer {
         getFeatureRegistrar().registerExtension("SERVER", new BukkitServerExtension(this), new ServerModule());
         getFeatureRegistrar().registerExtension("PERMISSION", new BukkitPermissionExtension(), new PermissionModule());
         getFeatureRegistrar().registerExtension("NEWS", new NewsExtension(), new NewsModule());
+
         if (GameOnInstance.getRegistry().getSettingValue("DAILY_REWARD_ENABLED")) {
             getFeatureRegistrar().registerExtension("DAILY_REWARD", new DailyRewardExtension(this), new DailyRewardModule());
         }
-        PlayerChatExtension extension = new PlayerChatExtension();
-        featureRegistry.registerExtension("PLAYER_CHAT", extension, new PlayerChatModule());
-        getServer().getPluginManager().registerEvents(extension, this);
+
+        PlayerChatExtension playerChatExtension = new PlayerChatExtension();
+        featureRegistry.registerExtension("PLAYER_CHAT", playerChatExtension, new PlayerChatModule());
+        getServer().getPluginManager().registerEvents(playerChatExtension, this);
+
+        statsExtension = new StatsExtension(this);
+        featureRegistry.registerExtension("STATS", statsExtension, new StatsModule());
+        getServer().getPluginManager().registerEvents(new StatsListener(this, statsExtension), this);
     }
 
     private void registerCommands() {
@@ -65,10 +75,14 @@ public class GameOnPlugin extends JavaPlugin implements IGameOnApiServer {
 
     @Override
     public void onDisable() {
-        server.stop(ServerStopReasonType.SERVER_STOPPED);
-        server = null;
+        if (statsExtension != null) {
+            System.out.println("Cancelling auto save stats!");
+            statsExtension.cancelAutoSave();
+        }
         featureRegistry.dispose();
         featureRegistry = null;
+        server.stop(ServerStopReasonType.SERVER_STOPPED);
+        server = null;
     }
 
     @Override

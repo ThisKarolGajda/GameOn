@@ -74,7 +74,6 @@ public class ContextHandler {
     @NotNull
     public static Optional<UserId> authenticateUser(ITokenAuthenticationExtension authentication, @NotNull WsMessageContext ctx) {
         String authHeader = ctx.header("Authorization");
-        System.out.println("header: " + authHeader);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             if (authentication.validateToken(token)) {
@@ -111,7 +110,7 @@ public class ContextHandler {
         return null;
     }
 
-    private static Optional<UserId> authenticateUser(ITokenAuthenticationExtension authentication, @NotNull Context ctx) {
+    public static Optional<UserId> authenticateUser(ITokenAuthenticationExtension authentication, @NotNull Context ctx) {
         String authHeader = ctx.header("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);

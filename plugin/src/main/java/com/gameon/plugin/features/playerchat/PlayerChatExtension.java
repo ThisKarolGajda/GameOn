@@ -17,7 +17,7 @@ public class PlayerChatExtension implements IPlayerChatExtension, Listener {
         //todo: add formating
         String format = source + " " + (player != null ? player.getDisplayName() : userId.username()) + ": %s";
         String formattedMessage = String.format(format, message);
-        Bukkit.getOnlinePlayers().forEach(onlinePlayer -> onlinePlayer.sendMessage(formattedMessage));
+        Bukkit.broadcastMessage(formattedMessage);
     }
 
     @Override
