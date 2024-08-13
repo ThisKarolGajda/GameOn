@@ -18,7 +18,7 @@ public class PlayerChatModule extends AbstractModule {
 
         chatExtension.getSubscription().onCalled((userId, message) -> broadcastWebSocketMessage(Map.of(
                 "uuid", userId.uuid().toString(),
-                "nickname", userId.username(),
+                "nickname", userId.nickname(),
                 "message", message,
                 "source", "Minecraft",
                 "date", LocalDateTime.now()
@@ -38,13 +38,13 @@ public class PlayerChatModule extends AbstractModule {
                     String message = (String) json.get("message");
                     String source = (String) json.get("source");
                     if (message == null || source == null) {
-                       return;
+                        return;
                     }
 
                     chatExtension.sendMessage(userId, message, source);
                     broadcastWebSocketMessage(Map.of(
                             "uuid", userId.uuid().toString(),
-                            "nickname", userId.username(),
+                            "nickname", userId.nickname(),
                             "message", message,
                             "source", source,
                             "date", LocalDateTime.now()

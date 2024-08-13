@@ -1,9 +1,14 @@
-# GameOn 
+# GameOn
 
 ## Overview
-GameOn Server Middleware is a comprehensive solution designed to connect Minecraft servers with a mobile application, providing a seamless experience for players and server owners. This part focuses on communication between game servers and the GameOn mobile app, allowing for features such as player statistics, economy management, and server promotion.
+
+GameOn Server Middleware is a comprehensive solution designed to connect Minecraft servers with a mobile application,
+providing a seamless experience for players and server owners. This part focuses on communication between game servers
+and the GameOn mobile app, allowing for features such as playerImpl statistics, economy management, and server
+promotion.
 
 ## Table of Contents
+
 - [Architecture](#architecture)
 - [API Documentation](#api-documentation)
 - [Contributing](#contributing)
@@ -13,22 +18,27 @@ GameOn Server Middleware is a comprehensive solution designed to connect Minecra
 ## Architecture
 
 ### Components
+
 - **Mobile Application**: Built with Flutter, connecting players to game servers.
 - [THIS] **Game Server Plugin**: A Java plugin that integrates with Minecraft servers.
 - **Backend Server**: Utilizes Firebase for remote configuration, analytics, and crash reporting.
 - [THIS] **REST API**: Facilitates communication between the mobile application and game servers.
 
 ### Communication Flow
+
 1. **Server Registration**: Servers register with Firebase Remote Config to be listed and monitored.
 2. **Player Interaction**: Players select a server, log in, and access their accounts through the mobile app.
-3. **Data Handling**: The middleware handles requests for player stats, economy transactions, and server information.
+3. **Data Handling**: The middleware handles requests for playerImpl stats, economy transactions, and server
+   information.
 
 ### APIs
+
 - **AuthenticationAPI**: Manages abstractUser authentication and sessions.
 - **EconomyAPI**: Handles in-game economy operations (balance, transactions).
-- ***PlayerStatsAPI**: Provides player statistics and game data.
+- ***PlayerStatsAPI**: Provides playerImpl statistics and game data.
 - ***ServerMapAPI**: Supplies information about available servers and their statuses.
 - ***ChatAPI**: Facilitates in-game chat functionality.
+
 ## API Documentation
 
 <details>
@@ -94,6 +104,7 @@ public interface IEconomy extends IExtension {
     Map<UserId, Double> getAllUserBalances();
 }
 ```
+
 </details> <details> <summary>IAuthentication Interface</summary>
 
 ```java
@@ -124,9 +135,11 @@ public interface IAuthentication extends IExtension {
     UserId getUserFromToken(String token);
 }
 ```
+
 </details> 
 
 ## Contributing
+
 We welcome contributions! Please follow these steps:
 Fork the Repository: Click on the "Fork" button in the top right corner.
 Create a New Branch: git checkout -b feature/YourFeature
@@ -136,9 +149,11 @@ Push to the Branch: git push origin feature/YourFeature
 Create a Pull Request: Go to the original repository and create a pull request.
 
 ## License
+
 This project is licensed under the MIT License. See the LICENSE file for details.
 
 ## Contact
+
 For questions or support, please contact:
 Email: jestemdobrywniczym@gmail.com
 Discord: opkarol

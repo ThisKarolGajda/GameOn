@@ -3,8 +3,8 @@ package com.gameon.api.server.features.permission;
 import com.gameon.api.server.common.UserId;
 import com.gameon.api.server.extension.AbstractModule;
 import com.gameon.api.server.extension.IExtension;
-import com.gameon.api.server.extension.handler.HandlerAccessType;
 import com.gameon.api.server.extension.handler.EndpointHandlerData;
+import com.gameon.api.server.extension.handler.HandlerAccessType;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
 
@@ -30,7 +30,6 @@ public class PermissionModule extends AbstractModule {
         Map<String, Object> json = deserialize(context);
         String uuid = (String) json.get("uuid");
         String nickname = (String) json.get("nickname");
-        System.out.println("isAdmin: uuid=" + uuid + " nickname=" + nickname);
         boolean isAdmin = permission.isAdmin(new UserId(UUID.fromString(uuid), nickname));
         if (isAdmin) {
             success(context, "User has admin permission");

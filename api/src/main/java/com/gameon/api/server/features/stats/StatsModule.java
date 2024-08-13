@@ -39,6 +39,14 @@ public class StatsModule extends AbstractModule {
                 this::getUserStats
         ));
 
+        endpoints.add(new EndpointHandlerData(
+                "user/{uuid}",
+                HandlerType.GET,
+                HandlerAccessType.EVERYONE,
+                this::getUser,
+                this::getUserStats
+        ));
+
         return endpoints;
     }
 
@@ -62,7 +70,9 @@ public class StatsModule extends AbstractModule {
             values.put(type.name(), statsExtension.getValue(type, userId));
         }
 
-        success(ctx, values);
+        success(ctx, Map.of(
+                "values", values
+        ));
     }
 
     private void getGlobalStats(Context ctx) {
@@ -72,7 +82,9 @@ public class StatsModule extends AbstractModule {
             values.put(type.name(), valueSummed);
         }
 
-        success(ctx, values);
+        success(ctx, Map.of(
+                "values", values
+        ));
     }
 
     @Override

@@ -14,7 +14,8 @@ public class GameOnInstance {
     private static IGameOnApiServer instance;
     private static AdminSettingsRegistry registry;
 
-    private GameOnInstance() {}
+    private GameOnInstance() {
+    }
 
     public static void initialize(IGameOnApiServer apiServer) {
         instance = apiServer;

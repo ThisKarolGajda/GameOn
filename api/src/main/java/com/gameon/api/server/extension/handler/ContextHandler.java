@@ -19,6 +19,14 @@ public class ContextHandler {
             if (handler.getContextOwnerConsumer() != null) {
                 UserId ownerId = handler.getOwnerIdSupplier() != null ? handler.getOwnerIdSupplier().apply(ctx) : null;
                 if (ownerId == null) {
+                    if (!ctx.pathParamMap().isEmpty() && ctx.pathParamMap().containsKey("uuid")) {
+                        String uuid = ctx.pathParam("uuid");
+                        if (!uuid.isEmpty()) {
+                            handler.getContextOwnerConsumer().accept(ctx, UserId.fromUuidString(uuid));
+                            return;
+                        }
+                    }
+
                     Optional<UserId> optional = authenticateUser(authenticationInfo, ctx);
                     if (optional.isEmpty()) {
                         return;

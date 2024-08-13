@@ -11,11 +11,12 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class PlayerChatExtension implements IPlayerChatExtension, Listener {
     private final PlayerChatSubscription playerChatSubscription = new PlayerChatSubscription();
+
     @Override
     public void sendMessage(UserId userId, String message, String source) {
         Player player = Bukkit.getPlayer(userId.uuid());
         //todo: add formating
-        String format = source + " " + (player != null ? player.getDisplayName() : userId.username()) + ": %s";
+        String format = source + " " + (player != null ? player.getDisplayName() : userId.nickname()) + ": %s";
         String formattedMessage = String.format(format, message);
         Bukkit.broadcastMessage(formattedMessage);
     }

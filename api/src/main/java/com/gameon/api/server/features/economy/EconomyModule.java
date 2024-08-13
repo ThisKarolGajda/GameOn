@@ -3,8 +3,8 @@ package com.gameon.api.server.features.economy;
 import com.gameon.api.server.common.UserId;
 import com.gameon.api.server.extension.AbstractModule;
 import com.gameon.api.server.extension.IExtension;
-import com.gameon.api.server.extension.handler.HandlerAccessType;
 import com.gameon.api.server.extension.handler.EndpointHandlerData;
+import com.gameon.api.server.extension.handler.HandlerAccessType;
 import com.google.gson.reflect.TypeToken;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
@@ -71,7 +71,8 @@ public class EconomyModule extends AbstractModule {
         Map<String, String> transferData;
 
         try {
-            transferData = getGson().fromJson(ctx.body(), new TypeToken<Map<String, String>>() {}.getType());
+            transferData = getGson().fromJson(ctx.body(), new TypeToken<Map<String, String>>() {
+            }.getType());
         } catch (Exception e) {
             error(ctx, "Invalid request body");
             return;

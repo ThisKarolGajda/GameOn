@@ -31,6 +31,7 @@ public class BukkitServerExtension implements IServerExtension {
         LocalDateTime now = LocalDateTime.now();
         return now.minus(Duration.ofMillis(jvmUpTime));
     }
+
     @Override
     public String getGameOnVersion() {
         return plugin.getDescription().getVersion();

@@ -40,7 +40,7 @@ public class JwtAuthenticationExtension implements ITokenAuthenticationExtension
     @Override
     public String generatePairingToken(UserId userId) {
         String pairingToken = generateRandomToken();
-        pairingTokens.put(userId.username() + ":" + pairingToken, userId);
+        pairingTokens.put(userId.nickname() + ":" + pairingToken, userId);
         return pairingToken;
     }
 

@@ -9,6 +9,7 @@ import com.gameon.plugin.GameOnPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -25,7 +26,7 @@ public class StatsExtension implements IStatsExtension {
     private final ConcurrentHashMap<UUID, long[]> pendingUpdates = new ConcurrentHashMap<>();
     private BukkitTask autoSaveTask;
 
-    public StatsExtension(GameOnPlugin plugin) {
+    public StatsExtension(@NotNull GameOnPlugin plugin) {
         this.plugin = plugin;
         this.filePath = plugin.getDataFolder().toPath().resolve("player_stats.dat");
         loadStats();
@@ -89,7 +90,6 @@ public class StatsExtension implements IStatsExtension {
             long[] stats = pendingUpdates.getOrDefault(userId.uuid(), playerStatsMap.getOrDefault(userId.uuid(), new long[StatType.values().length]));
             stats[statType.getIndex()] += value;
 
-            // update other types
             IExtension extension = plugin.getFeatureRegistrar().getExtension("ECONOMY");
             if (extension != null) {
                 IEconomyExtension economyExtension = (IEconomyExtension) extension;

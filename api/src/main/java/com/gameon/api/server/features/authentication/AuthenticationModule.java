@@ -3,8 +3,8 @@ package com.gameon.api.server.features.authentication;
 import com.gameon.api.server.common.UserId;
 import com.gameon.api.server.extension.AbstractModule;
 import com.gameon.api.server.extension.IExtension;
-import com.gameon.api.server.extension.handler.HandlerAccessType;
 import com.gameon.api.server.extension.handler.EndpointHandlerData;
+import com.gameon.api.server.extension.handler.HandlerAccessType;
 import io.javalin.http.HandlerType;
 
 import java.util.HashSet;
@@ -49,7 +49,7 @@ public class AuthenticationModule extends AbstractModule {
                             if (id != null) {
                                 success(ctx, Map.of(
                                         "uuid", id.uuid().toString(),
-                                        "nickname", id.username()
+                                        "nickname", id.nickname()
                                 ));
                                 return;
                             }

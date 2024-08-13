@@ -1,6 +1,7 @@
 package com.gameon.api.server.database;
 
 import com.google.gson.*;
+
 import java.lang.reflect.Type;
 
 public class ClassTypeAdapter implements JsonSerializer<Class<?>>, JsonDeserializer<Class<?>> {

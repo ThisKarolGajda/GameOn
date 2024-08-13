@@ -11,6 +11,7 @@ import com.gameon.api.server.features.economy.EconomyModule;
 import com.gameon.api.server.features.news.NewsExtension;
 import com.gameon.api.server.features.news.NewsModule;
 import com.gameon.api.server.features.permission.PermissionModule;
+import com.gameon.api.server.features.player.PlayerModule;
 import com.gameon.api.server.features.playerchat.PlayerChatModule;
 import com.gameon.api.server.features.server.ServerModule;
 import com.gameon.api.server.features.stats.StatsModule;
@@ -22,6 +23,8 @@ import com.gameon.plugin.command.GameOnCommand;
 import com.gameon.plugin.features.dailyreward.DailyRewardExtension;
 import com.gameon.plugin.features.economy.VaultEconomyExtension;
 import com.gameon.plugin.features.permission.BukkitPermissionExtension;
+import com.gameon.plugin.features.player.PlayerExtension;
+import com.gameon.plugin.features.player.PlayerListener;
 import com.gameon.plugin.features.playerchat.PlayerChatExtension;
 import com.gameon.plugin.features.server.BukkitServerExtension;
 import com.gameon.plugin.features.stats.StatsExtension;
@@ -32,6 +35,7 @@ public class GameOnPlugin extends JavaPlugin implements IGameOnApiServer {
     private JavalinServer server;
     private FeatureRegistry featureRegistry;
     private StatsExtension statsExtension;
+    private PlayerExtension playerExtension;
 
     @Override
     public void onEnable() {
@@ -67,6 +71,10 @@ public class GameOnPlugin extends JavaPlugin implements IGameOnApiServer {
         statsExtension = new StatsExtension(this);
         featureRegistry.registerExtension("STATS", statsExtension, new StatsModule());
         getServer().getPluginManager().registerEvents(new StatsListener(this, statsExtension), this);
+
+        playerExtension = new PlayerExtension(this);
+        featureRegistry.registerExtension("PLAYER", playerExtension, new PlayerModule());
+        getServer().getPluginManager().registerEvents(new PlayerListener(this, playerExtension), this);
     }
 
     private void registerCommands() {

@@ -81,7 +81,8 @@ public abstract class AbstractModule implements IModuleInfo {
 
     public static <T> @Nullable T deserialize(@NotNull WsMessageContext ctx) {
         try {
-            return getGson().fromJson(ctx.message(), new TypeToken<T>() {}.getType());
+            return getGson().fromJson(ctx.message(), new TypeToken<T>() {
+            }.getType());
         } catch (JsonSyntaxException e) {
             error(ctx, "Invalid message format");
             return null;

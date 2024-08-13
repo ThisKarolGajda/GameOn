@@ -13,21 +13,12 @@ import java.util.*;
 
 @SuppressWarnings("all")
 public class JSONDatabase<PK extends Serializable, T> {
-    private final Map<PK, T> cache = new HashMap<>();
-    private final String fileName;
-    private final Class<T[]> clazz;
-    private final boolean useMultiFiles;
-    private final Gson gson;
-    private final File dataFolder;
+    public static final Gson gson;
 
-    public JSONDatabase(String fileName, Class<T[]> clazz, boolean useMultiFiles) {
-        this.fileName = fileName;
-        this.dataFolder = GameOnInstance.getDataFolder();
-        this.clazz = clazz;
-        this.useMultiFiles = useMultiFiles;
+    static {
         String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormat);
-        this.gson = new GsonBuilder()
+        gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, type, jsonDeserializationContext) ->
                         ZonedDateTime.parse(json.getAsJsonPrimitive().getAsString()).toLocalDateTime())
                 .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (localDate, type, jsonSerializationContext) ->
@@ -36,6 +27,19 @@ public class JSONDatabase<PK extends Serializable, T> {
                 .excludeFieldsWithModifiers(Modifier.STATIC, Modifier.TRANSIENT)
                 .setPrettyPrinting()
                 .create();
+    }
+
+    private final Map<PK, T> cache = new HashMap<>();
+    private final String fileName;
+    private final Class<T[]> clazz;
+    private final boolean useMultiFiles;
+    private final File dataFolder;
+
+    public JSONDatabase(String fileName, Class<T[]> clazz, boolean useMultiFiles) {
+        this.fileName = fileName;
+        this.dataFolder = GameOnInstance.getDataFolder();
+        this.clazz = clazz;
+        this.useMultiFiles = useMultiFiles;
         initialize();
     }
 

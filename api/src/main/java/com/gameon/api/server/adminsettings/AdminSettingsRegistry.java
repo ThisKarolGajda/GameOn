@@ -84,8 +84,8 @@ public class AdminSettingsRegistry {
     public static class AdminRegistryValue {
         private final String key;
         private final Class<?> expectedObjectClass;
-        private Object value;
         private final Consumer<Object> onChange;
+        private Object value;
 
         public AdminRegistryValue(String key, Class<?> expectedObjectClass, Object value, Consumer<Object> onChange) {
             this.key = key;

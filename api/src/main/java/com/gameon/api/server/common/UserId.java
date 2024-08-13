@@ -3,7 +3,7 @@ package com.gameon.api.server.common;
 import java.util.Objects;
 import java.util.UUID;
 
-public record UserId(UUID uuid, String username) {
+public record UserId(UUID uuid, String nickname) {
     public static UserId fromUuid(UUID uuid) {
         if (uuid == null) {
             return null;
@@ -37,7 +37,7 @@ public record UserId(UUID uuid, String username) {
 
     @Override
     public String toString() {
-        return uuid.toString() + ":" + username;
+        return uuid.toString() + ":" + nickname;
     }
 
     @Override
@@ -49,6 +49,6 @@ public record UserId(UUID uuid, String username) {
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, username);
+        return Objects.hash(uuid, nickname);
     }
 }

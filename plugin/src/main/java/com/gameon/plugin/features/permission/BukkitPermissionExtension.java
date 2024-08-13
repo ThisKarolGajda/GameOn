@@ -11,7 +11,7 @@ public class BukkitPermissionExtension implements IPermissionExtension {
     @Override
     public boolean isAdmin(UserId userId) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(userId.uuid());
-        if (!Objects.equals(player.getName(), userId.username())) {
+        if (!Objects.equals(player.getName(), userId.nickname())) {
             return false;
         }
 

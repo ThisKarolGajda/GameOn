@@ -30,6 +30,10 @@ public class JavalinServer implements IServer {
     private Map<String, WebSocketHandlerData> activeWebSocketHandlers;
     private ITokenAuthenticationExtension authentication;
 
+    private static @NotNull String getPath(@NotNull IHandlerData handler, @NotNull AbstractModule feature) {
+        return DEFAULT_PATH + "/" + feature.getDefaultPath() + "/" + handler.getPath();
+    }
+
     @Override
     public void initialize(ServerSettings settings, IGameOnApiServer apiServer) {
         this.apiServer = apiServer;
@@ -125,10 +129,6 @@ public class JavalinServer implements IServer {
             });
             activeWebSocketHandlers.remove(path);
         });
-    }
-
-    private static @NotNull String getPath(@NotNull IHandlerData handler, @NotNull AbstractModule feature) {
-        return DEFAULT_PATH + "/" + feature.getDefaultPath() + "/" + handler.getPath();
     }
 
     private void handleAuthorization(Context ctx, EndpointHandlerData handler) {

@@ -3,8 +3,8 @@ package com.gameon.api.server.features.server;
 import com.gameon.api.server.common.UserId;
 import com.gameon.api.server.extension.AbstractModule;
 import com.gameon.api.server.extension.IExtension;
-import com.gameon.api.server.extension.handler.HandlerAccessType;
 import com.gameon.api.server.extension.handler.EndpointHandlerData;
+import com.gameon.api.server.extension.handler.HandlerAccessType;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
 
